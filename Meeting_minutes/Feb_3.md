@@ -5,11 +5,12 @@
 ### 1. Discuss possible project topics: ###
 Diabetes dataset compared with columbian dataset
 * diabetes paper says no significant microbiome shifts associated with any measures, and suggests that the shift in microbiome may occur earlier in diabetes onset
- * group that found dataset pivoted to columbian dataset to study pre-diabetic individuals
- * try to combine them?
+   * group that found dataset pivoted to columbian dataset to study pre-diabetic individuals
+   * try to combine them?
 * can use fasting glucose levels to determine if someone is pre-diabetic/diabetic
 * compare microbiome differences between pre-diabetic and diabetic
 * can also incorporate sex differences since women with diabetes often have worse outcomes
+
 References:
 * [Diabetes Texas Dataset Paper](https://link.springer.com/article/10.1186/s40168-015-0072-y#MOESM1)
 * [Columbia Dataset Paper](https://pubmed.ncbi.nlm.nih.gov/30054529/)
