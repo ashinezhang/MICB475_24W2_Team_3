@@ -30,5 +30,11 @@ References:
 ### 3. Extra Meeting Notes / To Do Items
 * backup everything on local drive in case container crashes or server unavailable
 * start thinking about how to merge metadata
-    * make sure columns are same format
-    * filter colombia dataset based on diabetes texas dataset
+    * figure out which variable regions sequenced, paired or single-end
+    * columbia - annotate pre-diabetic vs diabetic (same format as texas)
+    * make sure columns are same format (e.g. same titles for sex)
+    * normalize colombia dataset based on diabetes texas dataset
+        * can control for age (texas is older), maybe cardiovascular issues, weight, etc.
+* can also consider comparing with the mexico diabetes dataset
+    * regionally slightly closer to colombia
+    * has a control dataset - can compare controls to see if there are any major differences
