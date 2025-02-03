@@ -23,3 +23,12 @@ References:
 * [Influence of Gender in Diabetes Mellitus and Its Complication](https://pmc.ncbi.nlm.nih.gov/articles/PMC9408508/)
 
 ### 2. Plan Team Proposal - Due Feb 23 ###
+* plan out data processing, probably won't have it done
+* will have a different rubric sent
+* will send server credentials
+
+### 3. Extra Meeting Notes / To Do Items
+* backup everything on local drive in case container crashes or server unavailable
+* start thinking about how to merge metadata
+    * make sure columns are same format
+    * filter colombia dataset based on diabetes texas dataset
