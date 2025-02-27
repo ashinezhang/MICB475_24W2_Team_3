@@ -27,4 +27,4 @@ col_merg <- col_selected %>%
                                   ifelse(BMI >30 & BMI <=35, "obese", "severe"))))
 colnames(col_merg) <- c("Sample_ID", "Age", "BMI", "Country", "Group", "Sex", "BMI_class")
 
-write.csv(col_merg, "../data/clean_columbia_metadata.csv", row.names = FALSE, col.names = TRUE)
+write.csv(col_merg, "../data/clean_colombia_metadata.csv", row.names = FALSE, col.names = TRUE)
