@@ -14,7 +14,7 @@ col_meta_diabetes <- col_meta %>%
 # Select columns for merging and check Group counts
 
 col_selected <- col_meta_diabetes %>%
-  select(c("X.SampleID", "age_years", "BMI", "country", "Group"))
+  select(c("X.SampleID", "age_years", "BMI", "country", "sex", "Group"))
 
 Group_counts <- diabetes_selected %>%
   count(Group)
@@ -22,9 +22,9 @@ Group_counts <- diabetes_selected %>%
 # Adjust Weight classification and column names
 
 col_merg <- col_selected %>%
-  mutate(BMI_class = ifelse(BMI <= 25, "Lean", 
-                           ifelse(BMI >25 & BMI <= 30, "Overweight", 
-                                  ifelse(BMI >30 & BMI <=35, "Obese", "Severe"))))
-colnames(col_merg) <- c("Sample_ID", "Age", "BMI", "Country", "Group", "BMI_class")
+  mutate(BMI_class = ifelse(BMI <= 25, "lean", 
+                           ifelse(BMI >25 & BMI <= 30, "overweight", 
+                                  ifelse(BMI >30 & BMI <=35, "obese", "severe"))))
+colnames(col_merg) <- c("Sample_ID", "Age", "BMI", "Country", "Group", "Sex", "BMI_class")
 
 write.csv(col_merg, "../data/clean_columbia_metadata.csv", row.names = FALSE, col.names = TRUE)
