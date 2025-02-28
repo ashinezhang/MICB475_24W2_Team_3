@@ -48,4 +48,4 @@ mex_selected <- mex_meta %>%
 
 diabetes_merged <- bind_rows(col_merg, mex_selected)
 
-write.csv(diabetes_merged, "../data/merged_diabetes_metadata.csv", row.names = FALSE, col.names = TRUE)
+write.csv(diabetes_merged, "./data/merged_diabetes_metadata.csv", row.names = FALSE, col.names = TRUE)
