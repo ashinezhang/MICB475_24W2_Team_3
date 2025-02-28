@@ -3,10 +3,10 @@ library(dplyr)
 
 # Load in the datasets
 
-col_meta_fp <- "../data/colombia_metadata.csv"
+col_meta_fp <- "./data/colombia_metadata.csv"
 col_meta <- read.csv(file = col_meta_fp)
 
-mex_meta_fp <- "../data/diabetes_mexico_metadata.csv"
+mex_meta_fp <- "./data/diabetes_mexico_metadata.csv"
 mex_meta <- read.csv(file = mex_meta_fp)
 
 
