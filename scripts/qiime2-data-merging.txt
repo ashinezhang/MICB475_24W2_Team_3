@@ -1,4 +1,4 @@
-## Processing and merging Colombia and Mexico Diabetes datasets using QIIME2 for downstream analysis
+# Processing and merging Colombia and Mexico Diabetes datasets using QIIME2 for downstream analysis
 
 # Create a directory for the project and navigate to it - this will be the working directory
 mkdir /data/diabetes
@@ -11,3 +11,12 @@ qiime tools import \
   --input-path /mnt/datasets/project_2/colombia/colombia_manifest.txt \
   --output-path ./colombia_demux_seqs.qza
 
+# Import the Mexico Diabetes dataset using the manifest file
+qiime tools import \
+  --type "SampleData[PairedEndSequencesWithQuality]" \
+  --input-format PairedEndFastqManifestPhred33V2 \
+  --input-path /mnt/datasets/project_2/diabetes/mexico_manifest.tsv \
+  --output-path ./mexico_demux_seqs.qza
+
+## although both datasets are paired end, Colombia dataset worked with the single end, whereas Mexico Diabetes dataset didn't, so a different code was found and run for the Mexico Diabetes dataset
+## should we switch the Colombia dataset to the paired end code as well? Bilal et al. used the single end code for the Colombia dataset
