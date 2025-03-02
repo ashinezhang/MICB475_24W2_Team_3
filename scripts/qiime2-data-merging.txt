@@ -1,0 +1,13 @@
+## Processing and merging Colombia and Mexico Diabetes datasets using QIIME2 for downstream analysis
+
+# Create a directory for the project and navigate to it - this will be the working directory
+mkdir /data/diabetes
+cd /data/diabetes
+
+# Import the Colombia dataset using the manifest file
+qiime tools import \
+  --type "SampleData[SequencesWithQuality]" \
+  --input-format SingleEndFastqManifestPhred33V2 \
+  --input-path /mnt/datasets/project_2/colombia/colombia_manifest.txt \
+  --output-path ./colombia_demux_seqs.qza
+
