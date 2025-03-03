@@ -84,3 +84,9 @@ qiime feature-table tabulate-seqs \
   --i-data colombia-rep-seqs.qza \
   --o-visualization colombia-rep-seqs.qzv
 
+  # Maybe use this to split forward and reverse for Colombia
+  qiime demux split-paired \
+  --i-demux demux-paired.qza \
+  --o-demux-forward only-forward-reads.qza \
+  --o-demux-reverse only-reverse-reads.qza
+
