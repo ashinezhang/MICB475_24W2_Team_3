@@ -18,5 +18,3 @@ qiime tools import \
   --input-path /mnt/datasets/project_2/diabetes/mexico_manifest.tsv \
   --output-path ./mexico_demux_seqs.qza
 
-## although both datasets are paired end, Colombia dataset worked with the single end, whereas Mexico Diabetes dataset didn't, so a different code was found and run for the Mexico Diabetes dataset
-## should we switch the Colombia dataset to the paired end code as well? Bilal et al. used the single end code for the Colombia dataset
