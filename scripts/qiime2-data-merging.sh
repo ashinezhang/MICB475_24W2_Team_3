@@ -37,6 +37,14 @@ scp root@<IP>:/data/diabetes/colombia_demux_seqs.qzv .
 # chose truncation of 220
 
 # MARCH ??
+
+  # Maybe use this to split forward and reverse for Colombia
+  qiime demux split-paired \
+  --i-demux demux-paired.qza \
+  --o-demux-forward only-forward-reads.qza \
+  --o-demux-reverse only-reverse-reads.qza
+
+
 # Denoise: Determine ASVs with DADA2
 qiime dada2 denoise-paired \
   --i-demultiplexed-seqs mexico_demux_seqs.qza \
@@ -84,9 +92,35 @@ qiime feature-table tabulate-seqs \
   --i-data colombia-rep-seqs.qza \
   --o-visualization colombia-rep-seqs.qzv
 
-  # Maybe use this to split forward and reverse for Colombia
-  qiime demux split-paired \
-  --i-demux demux-paired.qza \
-  --o-demux-forward only-forward-reads.qza \
-  --o-demux-reverse only-reverse-reads.qza
+##Merge Datasets Together
+#Make and change directory to merged
+mkdir merged_data
+cd merged_data
 
+# Merge tables
+qiime feature-table merge \
+ --i-tables /data/diabetes/mexico-table.qza \
+ --i-tables /data/diabetes/colombia-table.qza \
+ --o-merged-table merged_table.qza
+
+# Merge rep-seqs
+qiime feature-table merge-seqs \
+ --i-data /data/diabetes/mexico-rep-seqs.qza \
+ --i-data /data/diabetes/colombia-rep-seqs.qza \
+ --o-merged-data merged_rep-seqs.qza
+
+##Taxonomy Analysis??
+  qiime feature-classifier classify-sklearn \
+  --i-classifier /mnt/datasets/classifiers/silva-138-99-nb-classifier.qza \  ###change potentially
+  --i-reads merged_rep-seqs.qza \
+  --o-classification merged_taxonomy.qza
+
+  qiime metadata tabulate \
+  --m-input-file merged_taxonomy.qza \
+  --o-visualization merged_taxonomy.qzv
+
+  qiime taxa barplot \
+  --i-table merged_table.qza \
+  --i-taxonomy merged_taxonomy.qza \
+  --m-metadata-file /data/metadata_files/team4_metadata_2.0.tsv \  ##Change for our metadata file, may need to import to server
+  --o-visualization merged_taxa-bar-plots.qzv
