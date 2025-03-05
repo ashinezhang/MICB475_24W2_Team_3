@@ -76,6 +76,7 @@ qiime feature-table summarize \
 
 #Match 5th This code does not run. Error: (1/1) Invalid value for '--i-data': mexico-rep-seqs.qza is not a QIIME archive. 
 #Some source said to update qiime
+
 qiime feature-table tabulate-seqs \
   --i-data mexico-rep-seqs.qza \
   --o-visualization mexico-rep-seqs.qzv
@@ -83,6 +84,22 @@ qiime feature-table tabulate-seqs \
 qiime feature-table tabulate-seqs \
   --i-data colombia-rep-seqs.qza \
   --o-visualization colombia-rep-seqs.qzv
+
+###David thinks the previous denoising code didn't complete so I am going to trymaking a new directory and denoising again
+mkdir denoise_test
+cd denoise_test
+screen -S denoise_mexico 
+
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs data/diabetes/mexico_demux_seqs.qza \
+  --p-trim-left-f 0 \
+  --p-trunc-len-f 220 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-r 220 \
+  --o-representative-sequences mexico-rep-seqs.qza \
+  --o-table mexico-table.qza \
+  --o-denoising-stats mexico-stats.qza
+
 
 ## Merge Datasets Together
 # Make and change directory to /data/diabetes/merged_data, this will be the working directory for the merged datasets
