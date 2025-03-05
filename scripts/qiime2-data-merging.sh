@@ -30,8 +30,8 @@ qiime demux summarize \
   --o-visualization colombia_demux_seqs.qzv
 
 # Make directory in home directory on local machine and copy file
-scp root@<IP>:/data/diabetes/mexico_demux_seqs.qzv . 
-scp root@<IP>:/data/diabetes/colombia_demux_seqs.qzv . 
+scp root@<IP>:/data/diabetes/mexico_demux_seqs.qzv .
+scp root@<IP>:/data/diabetes/colombia_demux_seqs.qzv .
 # use https://view.qiime2.org/ to visualize and chose truncation of 220
 
 ## MARCH 4, code took very long to load
@@ -48,8 +48,8 @@ qiime dada2 denoise-paired \
 
 qiime dada2 denoise-single \
   --i-demultiplexed-seqs colombia_demux_seqs.qza \
-  --p-trim-left 0 \ 
-  --p-trunc-len 220 \ 
+  --p-trim-left 0 \
+  --p-trunc-len 220 \
   --o-representative-sequences colombia-rep-seqs.qza \
   --o-table colombia-table.qza \
   --o-denoising-stats colombia-stats.qza
@@ -107,7 +107,7 @@ qiime feature-table merge-seqs \
   # replace trunc-len with the one you defined in your denoising step
   qiime feature-classifier extract-reads \
     --i-sequences ref-otus.qza \ # merged_rep-seqs.qza?
-    --p-f-primer GTGCCAGCMGCCGCGGTAA \ 
+    --p-f-primer GTGCCAGCMGCCGCGGTAA \
     --p-r-primer GGACTACHVGGGTWTCTAAT \
     --p-trunc-len 220 \
     --o-reads ref-seqs-trimmed.qza
