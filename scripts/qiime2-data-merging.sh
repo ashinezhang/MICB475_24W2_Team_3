@@ -91,7 +91,7 @@ cd denoise_test
 screen -S denoise_mexico 
 
 qiime dada2 denoise-paired \
-  --i-demultiplexed-seqs data/diabetes/mexico_demux_seqs.qza \
+  --i-demultiplexed-seqs /data/diabetes/mexico_demux_seqs.qza \
   --p-trim-left-f 0 \
   --p-trunc-len-f 220 \
   --p-trim-left-r 0 \
