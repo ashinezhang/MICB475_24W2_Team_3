@@ -73,7 +73,9 @@ qiime feature-table summarize \
   --i-table colombia-table.qza \
   --o-visualization colombia-table.qzv \
   --m-sample-metadata-file /mnt/datasets/project_2/colombia/colombia_metadata.txt
-  
+
+#Match 5th This code does not run. Error: (1/1) Invalid value for '--i-data': mexico-rep-seqs.qza is not a QIIME archive. 
+#Some source said to update qiime
 qiime feature-table tabulate-seqs \
   --i-data mexico-rep-seqs.qza \
   --o-visualization mexico-rep-seqs.qzv
