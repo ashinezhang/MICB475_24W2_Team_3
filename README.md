@@ -5,5 +5,9 @@
 
 **March:** [2025-03-03](meeting-minutes/03-03.md)
 
+## Scripts
+**Data processing and merging:**
+[Merge metadata](scripts/metadata-clean-and-merge.R), [Qiime2 demux, denoise, and merge](https://github.com/ashinezhang/MICB475_24W2_Team_3/blob/main/scripts/qiime2-data-merging.sh), 
+
 ## Gantt Chart
 <img src="/meeting-minutes/gantt-chart.jpg" >
