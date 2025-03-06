@@ -100,6 +100,46 @@ qiime dada2 denoise-paired \
   --o-table mexico-table.qza \
   --o-denoising-stats mexico-stats.qza
 
+screen -S denoise_colombia
+
+  qiime dada2 denoise-single \
+  --i-demultiplexed-seqs colombia_demux_seqs.qza \
+  --p-trim-left 0 \
+  --p-trunc-len 220 \
+  --o-representative-sequences colombia-rep-seqs.qza \
+  --o-table colombia-table.qza \
+  --o-denoising-stats colombia-stats.qza
+
+
+  ##Repeat on new files
+  # Visualize DADA2 stats
+qiime metadata tabulate \
+  --m-input-file mexico-stats.qza \
+  --o-visualization mexico-stats.qzv
+
+qiime metadata tabulate \
+  --m-input-file colombia-stats.qza \
+  --o-visualization colombia-stats.qzv
+
+# Visualize ASVs stats
+qiime feature-table summarize \
+  --i-table mexico-table.qza \
+  --o-visualization mexico-table.qzv \
+  --m-sample-metadata-file /mnt/datasets/project_2/diabetes/mexico_metadata.tsv
+
+qiime feature-table summarize \
+  --i-table colombia-table.qza \
+  --o-visualization colombia-table.qzv \
+  --m-sample-metadata-file /mnt/datasets/project_2/colombia/colombia_metadata.txt
+
+qiime feature-table tabulate-seqs \
+  --i-data mexico-rep-seqs.qza \
+  --o-visualization mexico-rep-seqs.qzv
+
+qiime feature-table tabulate-seqs \
+  --i-data colombia-rep-seqs.qza \
+  --o-visualization colombia-rep-seqs.qzv
+
 
 ## Merge Datasets Together
 # Make and change directory to /data/diabetes/merged_data, this will be the working directory for the merged datasets
@@ -108,16 +148,18 @@ cd merged_data
 
 # Merge tables
 qiime feature-table merge \
- --i-tables /data/diabetes/mexico-table.qza \
- --i-tables /data/diabetes/colombia-table.qza \
+ --i-tables /data/diabetes/denoise_test/mexico-table.qza \
+ --i-tables /data/diabetes/denoise_test/colombia-table.qza \
  --o-merged-table merged_table.qza
 
 # Merge rep-seqs
 qiime feature-table merge-seqs \
- --i-data /data/diabetes/mexico-rep-seqs.qza \
- --i-data /data/diabetes/colombia-rep-seqs.qza \
+ --i-data /data/diabetes/denoise_test/mexico-rep-seqs.qza \
+ --i-data /data/diabetes/denoise_test/colombia-rep-seqs.qza \
  --o-merged-data merged_rep-seqs.qza
 
+
+#######Skip training classifier and use exisiting one
 ## Train classifier on the merged datasets because there are only primer sequences for Colombia dataset and they are both V4 region 
   # CODE FROM CANVAS, NEED TO EDIT
   # Extract your amplicon of interest from the reference database
@@ -143,11 +185,13 @@ qiime feature-table merge-seqs \
     --i-classifier classifier.qza \
     --i-reads merged_rep-seqs.qza \
     --o-classification merged_taxonomy.qza
+   ######################
 
 
 ## Taxonomy Analysis
-  qiime feature-classifier classify-sklearn \
-  --i-classifier /mnt/datasets/classifiers/silva-138-99-nb-classifier.qza \  ###change potentially
+##Skip training classifier and use provided classifier:
+qiime feature-classifier classify-sklearn \
+  --i-classifier /mnt/datasets/classifiers/silva-138-99-515-806-nb-classifier.qza \
   --i-reads merged_rep-seqs.qza \
   --o-classification merged_taxonomy.qza
 
