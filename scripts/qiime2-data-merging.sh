@@ -203,8 +203,10 @@ qiime feature-classifier classify-sklearn \
 
 scp merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes
 
+##Qiime only works wtih tsv data, and we need to change the column name to sample-id
+
   qiime taxa barplot \
   --i-table merged_table.qza \
   --i-taxonomy merged_taxonomy.qza \
-  --m-metadata-file /data/diabetes/merged_diabetes_metadata.csv \  ##Change for our metadata file, may need to import to server
+  --m-metadata-file /data/diabetes/merged_diabetes_metadata.tsv \  
   --o-visualization merged_taxa-bar-plots.qzv
