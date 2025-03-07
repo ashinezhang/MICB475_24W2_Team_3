@@ -188,7 +188,7 @@ qiime feature-table merge-seqs \
    ######################
 
 ## Taxonomy Analysis
-##Skip training classifier and use provided classifier:
+##Skip training classifier and use provided classifier to assign taxonomy to your reads:
 qiime feature-classifier classify-sklearn \
   --i-classifier /mnt/datasets/classifiers/silva-138-99-515-806-nb-classifier.qza \
   --i-reads merged_rep-seqs.qza \
