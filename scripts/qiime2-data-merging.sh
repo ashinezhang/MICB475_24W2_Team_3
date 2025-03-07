@@ -187,7 +187,6 @@ qiime feature-table merge-seqs \
     --o-classification merged_taxonomy.qza
    ######################
 
-
 ## Taxonomy Analysis
 ##Skip training classifier and use provided classifier:
 qiime feature-classifier classify-sklearn \
@@ -199,8 +198,13 @@ qiime feature-classifier classify-sklearn \
   --m-input-file merged_taxonomy.qza \
   --o-visualization merged_taxonomy.qzv
 
+##Import metadata from local computer
+#cd to file containing folder
+
+scp merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes
+
   qiime taxa barplot \
   --i-table merged_table.qza \
   --i-taxonomy merged_taxonomy.qza \
-  --m-metadata-file /data/metadata_files/team4_metadata_2.0.tsv \  ##Change for our metadata file, may need to import to server
+  --m-metadata-file /data/diabetes/merged_diabetes_metadata.csv \  ##Change for our metadata file, may need to import to server
   --o-visualization merged_taxa-bar-plots.qzv
