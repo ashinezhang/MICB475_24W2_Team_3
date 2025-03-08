@@ -184,3 +184,14 @@ scp new_merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes
   --i-taxonomy merged_taxonomy.qza \
   --m-metadata-file /data/diabetes/new_merged_diabetes_metadata.tsv \  
   --o-visualization merged_taxa-bar-plots.qzv
+
+
+
+###Filtering
+#Filter out mitochondria and chloroplast data
+qiime taxa filter-table \
+  --i-table merged_table.qza \
+  --i-taxonomy merge_taxonomy.qza \
+  --p-exclude mitochondria,chloroplast \
+  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+
