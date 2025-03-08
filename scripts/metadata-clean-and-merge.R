@@ -52,4 +52,4 @@ diabetes_merged <- bind_rows(col_merg, mex_selected)
 
 ##old code: write.csv(diabetes_merged, "./data/merged_diabetes_metadata.csv", row.names = FALSE, col.names = TRUE)
 ##new code:
-write.table(diabetes_merged, file = "new_merged_diabetes_metadata.csv", sep = "\t", row.names = FALSE, col.names = TRUE)
+write.table(diabetes_merged, file = "./data/new_merged_diabetes_metadata.csv", sep = "\t", row.names = FALSE, col.names = TRUE)
