@@ -123,7 +123,7 @@ qiime metadata tabulate \
   --m-input-file colombia-stats.qza \
   --o-visualization colombia-stats.qzv
 
-# Visualize ASVs stats
+# Visualize ASVs stats  ##Not sure if this stpe is nessecary anymore since we merged.
 qiime feature-table summarize \
   --i-table mexico-table.qza \
   --o-visualization mexico-table.qzv \
@@ -160,6 +160,16 @@ qiime feature-table merge-seqs \
  --i-data /data/diabetes/denoise_test/colombia-rep-seqs.qza \
  --o-merged-data merged_rep-seqs.qza
 
+##Visualize merged table and rep-seqs
+# Visualize ASVs stats
+qiime feature-table summarize \
+  --i-table merged_table.qza \
+  --o-visualization merged_table.qzv \
+  --m-sample-metadata-file /data/diabetes/new_merged_diabetes_metadata.tsv
+
+qiime feature-table tabulate-seqs \
+  --i-data merged_rep-seqs.qza \
+  --o-visualization merged_rep-seqs.qzv
 
 ## Taxonomy Analysis
 ##Skip training classifier and use provided classifier to assign taxonomy to your reads:
