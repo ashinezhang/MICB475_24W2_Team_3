@@ -34,6 +34,8 @@ scp root@<IP>:/data/diabetes/mexico_demux_seqs.qzv .
 scp root@<IP>:/data/diabetes/colombia_demux_seqs.qzv .
 # use https://view.qiime2.org/ to visualize and chose truncation of 220
 
+
+###Note this section of code was re-run and the generated files were not used
 ## MARCH 4, code took very long to load
 # Denoise: Determine ASVs with DADA2
 qiime dada2 denoise-paired \
@@ -159,34 +161,6 @@ qiime feature-table merge-seqs \
  --o-merged-data merged_rep-seqs.qza
 
 
-#######Skip training classifier and use exisiting one
-## Train classifier on the merged datasets because there are only primer sequences for Colombia dataset and they are both V4 region 
-  # CODE FROM CANVAS, NEED TO EDIT
-  # Extract your amplicon of interest from the reference database
-  # replace the ref-otus.qza with the representative sequence file on the server (e.g. /mnt/datasets/silva_ref_files/silva-138-99-seqs.qza)
-  # replace primer sequences with your correct sequences
-  # replace trunc-len with the one you defined in your denoising step
-  qiime feature-classifier extract-reads \
-    --i-sequences ref-otus.qza \ # merged_rep-seqs.qza?
-    --p-f-primer GTGCCAGCMGCCGCGGTAA \
-    --p-r-primer GGACTACHVGGGTWTCTAAT \
-    --p-trunc-len 220 \
-    --o-reads ref-seqs-trimmed.qza
-  
-  # Train classifier with your new ref-seq file
-  # Replace ref-taxonomy.qza with the representative taxonomy file on the server (e.g. /mnt/datasets/silva_ref_files/silva-138-99-tax.qza)
-  qiime feature-classifier fit-classifier-naive-bayes \
-    --i-reference-reads ref-seqs-trimmed.qza \
-    --i-reference-taxonomy ref-taxonomy.qza \ # i have no idea what this would be, don't we need the classifer to make the taxonomy?
-    --o-classifier classifier.qza
-  
-  # Use the trained classifier to assign taxonomy to your reads (rep-seqs.qza)
-  qiime feature-classifier classify-sklearn \
-    --i-classifier classifier.qza \
-    --i-reads merged_rep-seqs.qza \
-    --o-classification merged_taxonomy.qza
-   ######################
-
 ## Taxonomy Analysis
 ##Skip training classifier and use provided classifier to assign taxonomy to your reads:
 qiime feature-classifier classify-sklearn \
@@ -201,12 +175,12 @@ qiime feature-classifier classify-sklearn \
 ##Import metadata from local computer
 #cd to file containing folder
 
-scp merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes
+scp new_merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes
 
 ##Qiime only works wtih tsv data, and we need to change the column name to sample-id
 
   qiime taxa barplot \
   --i-table merged_table.qza \
   --i-taxonomy merged_taxonomy.qza \
-  --m-metadata-file /data/diabetes/merged_diabetes_metadata.tsv \  
+  --m-metadata-file /data/diabetes/new_merged_diabetes_metadata.tsv \  
   --o-visualization merged_taxa-bar-plots.qzv
