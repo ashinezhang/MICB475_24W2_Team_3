@@ -13,7 +13,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 qiime diversity alpha-rarefaction \
   --i-table merged_table.qza \
   --i-phylogeny rooted-tree.qza \
-  --p-max-depth 50000 \
+  --p-max-depth 25000 \
   --m-metadata-file /data/diabetes/new_merged_diabetes_metadata.tsv \
   --o-visualization alpha-rarefaction.qzv
 
