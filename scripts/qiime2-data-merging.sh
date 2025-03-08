@@ -195,3 +195,8 @@ qiime taxa filter-table \
   --p-exclude mitochondria,chloroplast \
   --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 
+#Visualization of table
+qiime feature-table summarize \
+  --i-table table-no-mitochondria-no-chloroplast.qza \
+  --o-visualization table-no-mitochondria-no-chloroplast.qzv \
+  --m-sample-metadata-file /data/diabetes/new_merged_diabetes_metadata.tsv
