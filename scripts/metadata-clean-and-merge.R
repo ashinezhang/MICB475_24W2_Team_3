@@ -38,7 +38,7 @@ colnames(col_merg) <- c("sample-id", "Age", "BMI", "Country", "Sex", "Group", "B
 mex_meta$Country <- "Mexico"
 
 #Rename Mexico columns
-mex_meta<-rename(mex_meta, Sample=Sample_ID,Sample_ID=sample.id, BMI_class=Obesity)
+mex_meta<-rename(mex_meta, Sample=Sample_ID, "sample-id"=sample.id, BMI_class=Obesity
 
 #Make sex lowercase to match with Colombia dataset
 mex_meta$Sex <- tolower(mex_meta$Sex)
@@ -52,4 +52,4 @@ diabetes_merged <- bind_rows(col_merg, mex_selected)
 
 ##old code: write.csv(diabetes_merged, "./data/merged_diabetes_metadata.csv", row.names = FALSE, col.names = TRUE)
 ##new code:
-write.table(diabetes_merged, file = "./data/new_merged_diabetes_metadata.csv", sep = "\t", row.names = FALSE, col.names = TRUE)
+write.table(diabetes_merged, file = "./data/new_merged_diabetes_metadata.tsv", sep = "\t", row.names = FALSE, col.names = TRUE)
