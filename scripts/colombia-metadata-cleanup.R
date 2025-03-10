@@ -41,7 +41,7 @@ col_clean <- col_selected %>%
   mutate(BMI_class = ifelse(BMI <= 25, "lean", 
                             ifelse(BMI >25 & BMI <= 30, "overweight", 
                                    ifelse(BMI >30 & BMI <=35, "obese", "severe"))))
-colnames(col_BMI) <- c("sample-id", "Age", "BMI", "Country", "Sex", "Group", "Group and Sex", "BMI_class")
+colnames(col_clean) <- c("sample-id", "Age", "BMI", "Country", "Sex", "Group", "Group and Sex", "BMI_class")
 
 # Make table 
 write.table(col_clean, file = "./data/new_colombia_diabetes_metadata.tsv", sep = "\t", row.names = FALSE, col.names = TRUE)
