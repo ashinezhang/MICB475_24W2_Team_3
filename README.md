@@ -9,5 +9,7 @@
 **Data processing and merging:**
 [Merge metadata](scripts/metadata-clean-and-merge.R), [Qiime2 demux, denoise, and merge](https://github.com/ashinezhang/MICB475_24W2_Team_3/blob/main/scripts/qiime2-data-merging.sh), [Qiime2 analysis](scripts/qiime2-data-analysis.sh)
 
+**Colombia dataset only - qiime processing:** [Metadata clean up](scripts/colombia-metadata-cleanup.R)
+
 ## Gantt Chart
 <img src="/meeting-minutes/gantt-chart.jpg" >
