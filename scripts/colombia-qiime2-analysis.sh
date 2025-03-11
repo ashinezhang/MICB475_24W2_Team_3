@@ -19,10 +19,8 @@ screen -S colombia-only
 ##Skip training classifier and use provided classifier to assign taxonomy to your reads since they are V4 region
 qiime feature-classifier classify-sklearn \
   --i-classifier /mnt/datasets/classifiers/silva-138-99-515-806-nb-classifier.qza \
-  --i-reads /data/diabetes/colombia_rep-seqs.qza \
+  --i-reads /data/diabetes/colombia-rep-seqs.qza \
   --o-classification colombia_taxonomy.qza
-
-# waiting for code to finish
 
 qiime metadata tabulate \
  --m-input-file colombia_taxonomy.qza \
