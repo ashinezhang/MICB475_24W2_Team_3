@@ -51,7 +51,7 @@ qiime feature-table summarize \
 
 # Generate a tree for phylogenetic diversity analyses
 qiime phylogeny align-to-tree-mafft-fasttree \
-  --i-sequences /data/diabetes/denoise_test/colombia_rep-seqs.qza \
+  --i-sequences /data/diabetes/denoise_test/colombia-rep-seqs.qza \
   --o-alignment aligned-rep-seqs.qza \
   --o-masked-alignment masked-aligned-rep-seqs.qza \
   --o-tree unrooted-tree.qza \
