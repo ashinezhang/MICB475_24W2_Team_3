@@ -2,17 +2,15 @@
 # ^ Code is in the /scripts/qiime2-data-merging.sh file
 # Now that we abandoned the Mexico diabetes dataset due to large regional differences, we need to do the analysis on just the Colombia dataset
 
+##### CODE NOT RUN YET, JUST DRAFTED 
+##### NEED TO CHECK FILE PATHS ARE CORRECT, MAYBE MOVE COLOMBIA FILES INTO THE COLOMBIA FOLDER?
+
 # make a new working directory to keep it separate from the merged analyses
 mkdir /data/diabetes/colombia
 cd /data/diabetes/colombia
 
 ## Import new_colombia_diabetes_metadata.tsv from local computer Github to the server
 scp new_merged_diabetes_metadata.csv root@10.19.139.163:/data/diabetes/colombia
-
-
-##### CODE NOT RUN YET, JUST DRAFTED 
-##### NEED TO CHECK FILE PATHS ARE CORRECT, MAYBE MOVE COLOMBIA FILES INTO THE COLOMBIA FOLDER?
-
 
 ## Taxonomy Analysis
 ##Skip training classifier and use provided classifier to assign taxonomy to your reads since they are V4 region
