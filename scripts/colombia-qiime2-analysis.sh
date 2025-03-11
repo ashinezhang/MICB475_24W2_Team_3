@@ -19,7 +19,7 @@ screen -S colombia-only
 ##Skip training classifier and use provided classifier to assign taxonomy to your reads since they are V4 region
 qiime feature-classifier classify-sklearn \
   --i-classifier /mnt/datasets/classifiers/silva-138-99-515-806-nb-classifier.qza \
-  --i-reads /data/diabetes/colombia-rep-seqs.qza \
+  --i-reads /data/diabetes/denoise_test/colombia-rep-seqs.qza \
   --o-classification colombia_taxonomy.qza
 
 qiime metadata tabulate \
@@ -28,7 +28,7 @@ qiime metadata tabulate \
 
 ## Create taxa barplot
 qiime taxa barplot \
- --i-table /data/diabetes/colombia-table.qza \
+ --i-table /data/diabetes/denoise_test/colombia-table.qza \
  --i-taxonomy colombia_taxonomy.qza \
  --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \  
  --o-visualization colombia_taxa-bar-plots.qzv
@@ -37,7 +37,7 @@ qiime taxa barplot \
 ###Filtering
 #Filter out mitochondria and chloroplast data
 qiime taxa filter-table \
-  --i-table /data/diabetes/colombia-table.qza \
+  --i-table /data/diabetes/denoise_test/colombia-table.qza \
   --i-taxonomy colombia_taxonomy.qza \
   --p-exclude mitochondria,chloroplast \
   --o-filtered-table table-no-mitochondria-no-chloroplast.qza
@@ -51,7 +51,7 @@ qiime feature-table summarize \
 
 # Generate a tree for phylogenetic diversity analyses
 qiime phylogeny align-to-tree-mafft-fasttree \
-  --i-sequences /data/diabetes/colombia_rep-seqs.qza \
+  --i-sequences /data/diabetes/denoise_test/colombia_rep-seqs.qza \
   --o-alignment aligned-rep-seqs.qza \
   --o-masked-alignment masked-aligned-rep-seqs.qza \
   --o-tree unrooted-tree.qza \
@@ -59,7 +59,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 
 # Alpha-rarefaction - need to adjusted depth
 qiime diversity alpha-rarefaction \
-  --i-table /data/diabetes/colombia-table.qza \
+  --i-table /data/diabetes/denoise_test/colombia-table.qza \
   --i-phylogeny rooted-tree.qza \
   --p-max-depth 25000 \
   --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv\
