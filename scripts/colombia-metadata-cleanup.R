@@ -44,5 +44,5 @@ col_clean <- col_selected %>%
 colnames(col_clean) <- c("sample-id", "age", "BMI", "country", "sex", "diabetic_status", "diabetic_status_and_sex", "BMI_class")
 
 # Make table 
-write.table(col_clean, file = "./data/new_colombia_diabetes_metadata.tsv", sep = "\t", row.names = FALSE, col.names = TRUE)
+write.table(col_clean, file = "./data/fixed_colombia_diabetes_metadata.tsv", sep = "\t", row.names = FALSE, col.names = TRUE)
                  
