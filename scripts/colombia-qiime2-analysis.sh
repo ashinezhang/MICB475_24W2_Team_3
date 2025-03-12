@@ -59,9 +59,9 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 
 # Alpha-rarefaction - need to adjusted depth
 qiime diversity alpha-rarefaction \
-  --i-table /data/diabetes/denoise_test/colombia-table.qza \
+  --i-table table-no-mitochondria-no-chloroplast.qza \
   --i-phylogeny rooted-tree.qza \
-  --p-max-depth 25000 \
+  --p-max-depth 100000 \
   --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv\
   --o-visualization alpha-rarefaction.qzv
 
