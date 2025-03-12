@@ -61,7 +61,7 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 qiime diversity alpha-rarefaction \
   --i-table table-no-mitochondria-no-chloroplast.qza \
   --i-phylogeny rooted-tree.qza \
-  --p-max-depth 100000 \
+  --p-max-depth 20000 \
   --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv\
   --o-visualization alpha-rarefaction.qzv
 
