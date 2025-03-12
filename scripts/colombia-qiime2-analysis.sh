@@ -81,10 +81,16 @@ qiime diversity alpha-rarefaction \
   --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
   --o-visualization core-metrics-results/shannon_significance.qzv
 
+#Faith_pd qvz
+  qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --o-visualization core-metrics-results/faith_pd_significance.qzv
+
   #Beta Diversity
   qiime diversity beta-group-significance \
   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
   --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
-  --m-metadata-column Group And Sex \
+  --m-metadata-column "Group And Sex" \
   --o-visualization core-metrics-results/weighted-unifrac-significance.qzv \
   --p-pairwise
