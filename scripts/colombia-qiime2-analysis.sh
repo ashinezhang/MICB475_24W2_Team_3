@@ -65,4 +65,26 @@ qiime diversity alpha-rarefaction \
   --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv\
   --o-visualization alpha-rarefaction.qzv
 
-  
+  ##Based on table and rare-faction: Sampling depth of 5900 was chosen to prevent loss of rarer groups
+
+#Get Core Metrics
+  qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny rooted-tree.qza \
+  --i-table  table-no-mitochondria-no-chloroplast.qza \
+  --p-sampling-depth 5900 \
+  --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --output-dir core-metrics-results
+
+  #Shannon Diversity qzv
+  qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/shannon_vector.qza \
+  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --o-visualization core-metrics-results/shannon_significance.qzv
+
+  #Beta Diversity
+  qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --m-metadata-column Group And Sex \
+  --o-visualization core-metrics-results/weighted-unifrac-significance.qzv \
+  --p-pairwise
