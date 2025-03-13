@@ -9,7 +9,7 @@ mkdir /data/diabetes/colombia
 cd /data/diabetes/colombia
 
 ## Import new_colombia_diabetes_metadata.tsv from local computer Github to the server
-scp new_colombia_diabetes_metadata.tsv root@10.19.139.163:/data/diabetes/colombia
+scp fixed_colombia_diabetes_metadata.tsv root@10.19.139.163:/data/diabetes/colombia
 
 ## Taxonomy Analysis
 
@@ -30,7 +30,7 @@ qiime metadata tabulate \
 qiime taxa barplot \
  --i-table /data/diabetes/denoise_test/colombia-table.qza \
  --i-taxonomy colombia_taxonomy.qza \
- --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \  
+ --m-metadata-file /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
  --o-visualization colombia_taxa-bar-plots.qzv
 
 
@@ -46,7 +46,7 @@ qiime taxa filter-table \
 qiime feature-table summarize \
   --i-table table-no-mitochondria-no-chloroplast.qza \
   --o-visualization table-no-mitochondria-no-chloroplast.qzv \
-  --m-sample-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv
+  --m-sample-metadata-file /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv
 
 
 # Generate a tree for phylogenetic diversity analyses
@@ -62,7 +62,7 @@ qiime diversity alpha-rarefaction \
   --i-table table-no-mitochondria-no-chloroplast.qza \
   --i-phylogeny rooted-tree.qza \
   --p-max-depth 20000 \
-  --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv\
+  --m-metadata-file /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv\
   --o-visualization alpha-rarefaction.qzv
 
   ##Based on table and rare-faction: Sampling depth of 5900 was chosen to prevent loss of rarer groups
@@ -72,25 +72,32 @@ qiime diversity alpha-rarefaction \
   --i-phylogeny rooted-tree.qza \
   --i-table  table-no-mitochondria-no-chloroplast.qza \
   --p-sampling-depth 5900 \
-  --m-metadata-file /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --m-metadata-file /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
   --output-dir core-metrics-results
 
   #Shannon Diversity qzv
   qiime diversity alpha-group-significance \
   --i-alpha-diversity core-metrics-results/shannon_vector.qza \
-  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --m-metadata-file  /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
   --o-visualization core-metrics-results/shannon_significance.qzv
 
 #Faith_pd qvz
   qiime diversity alpha-group-significance \
   --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
-  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
+  --m-metadata-file  /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
   --o-visualization core-metrics-results/faith_pd_significance.qzv
 
   #Beta Diversity
   qiime diversity beta-group-significance \
   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
-  --m-metadata-file  /data/diabetes/colombia/new_colombia_diabetes_metadata.tsv \
-  --m-metadata-column "Group And Sex" \
+  --m-metadata-file  /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
+  --m-metadata-column "diabetic_status_and_sex" \
   --o-visualization core-metrics-results/weighted-unifrac-significance.qzv \
+  --p-pairwise
+
+  qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file  /data/diabetes/colombia/fixed_colombia_diabetes_metadata.tsv \
+  --m-metadata-column "diabetic_status" \
+  --o-visualization core-metrics-results/diabetic_stats_weighted-unifrac-significance.qzv \
   --p-pairwise
