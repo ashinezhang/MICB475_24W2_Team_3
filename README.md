@@ -7,7 +7,7 @@
 
 ## Scripts
 **Data processing and merging:**
-[Merge metadata](scripts/metadata-clean-and-merge.R), [Qiime2 demux, denoise, and merge](https://github.com/ashinezhang/MICB475_24W2_Team_3/blob/main/scripts/qiime2-data-merging.sh), [Qiime2 analysis](scripts/qiime2-data-analysis.sh)
+[Merge metadata](scripts/merge/metadata-clean-and-merge.R), [Qiime2 demux, denoise, and merge](scripts/merge/qiime2-data-merging.sh), [Qiime2 analysis](scripts/merge/qiime2-data-analysis.sh)
 
 **Colombia dataset only - qiime processing:** [Metadata clean up](scripts/colombia-metadata-cleanup.R), [Qiime2 taxonomic and diversity analysis](scripts/colombia-qiime2-analysis.sh)
 
