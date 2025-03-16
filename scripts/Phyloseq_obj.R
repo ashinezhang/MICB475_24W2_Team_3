@@ -52,6 +52,7 @@ rarecurve(t(as.data.frame(otu_table(colombia_final))), cex=0.1)
 colombia_rare <- rarefy_even_depth(colombia_final, rngseed = 1, sample.size = 5900)
 
 ##### Saving #####
-save(colombia_final, file="data/colombia_final.RData")
-save(colombia_rare, file="data/colombia_rare.RData")
+save(colombia_final, file="colombia_final.RData")
+save(colombia_rare, file="colombia_rare.RData")
+
 
