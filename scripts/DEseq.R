@@ -50,7 +50,7 @@ bc_dm <- distance(colombia_rare, method="bray")
 
 pcoa_bc <- ordinate(colombia_rare, method="PCoA", distance=bc_dm)
 
-plot_ordination(colombia_rare, pcoa_bc, color = "body.site", shape="subject")
+plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_Status")
 
 gg_pcoa <- plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_status") +
   labs(pch="Diabetic Status #", col = "sex")
