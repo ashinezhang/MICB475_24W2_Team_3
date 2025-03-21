@@ -3,7 +3,7 @@
 ## Meeting Minutes ##
 **February:** [2025-02-03](meeting-minutes/02-03.md) | [2025-02-10](meeting-minutes/02-10.md) | [2025-02-18](meeting-minutes/02-18.md) | [2025-02-24](meeting-minutes/02-24.md) 
 
-**March:** [2025-03-03](meeting-minutes/03-03.md) | [2025-03-10](meeting-minutes/03-10.md) | [2025-03-17](meeting-minutes/03-17.md)
+**March:** [2025-03-03](meeting-minutes/03-03.md) | [2025-03-10](meeting-minutes/03-10.md) | [2025-03-17](meeting-minutes/03-17.md) | [2025-03-24](meeting-minutes/03-24.md)
 
 ## Scripts
 **Data processing and merging (did not proceed with):**
