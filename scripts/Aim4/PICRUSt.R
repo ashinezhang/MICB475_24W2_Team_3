@@ -1,3 +1,10 @@
+### On Nov 25, 2024, ggpicrust2 was archived from cran, so it can't install
+### Downloaded R version 4.2.2, click Tools > Global Options and switch to 4.2.2
+### Downloaded Rtools version 4.2
+### still not installing
+
+
+
 ##### Install packages #####
 # Start by installing all necessary packages 
 # When asked if you want to install from source, type Yes in the terminal below
@@ -17,7 +24,7 @@ for (pkg in pkgs) {
   if (!requireNamespace(pkg, quietly = TRUE))
     BiocManager::install(pkg)
 }
-# this can take very long to load
+# this can take very long to load, 
 # when asked if you want to update, type "n" for none to make it faster
 
 # After installing all of its above dependencies, install ggpicrust2
