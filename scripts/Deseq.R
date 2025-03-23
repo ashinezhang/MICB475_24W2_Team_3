@@ -1,9 +1,11 @@
+library(ggpubr)
 library(ggplot2)
 library(phyloseq)
 library(ape)
 library(tidyverse)
 library(picante)
 library(DESeq2)
+library(indicspecies)
 
 #Alpha and Beta Diversity
 #### Load in RData ####
@@ -13,9 +15,9 @@ load("data/colombia_final.RData")
 #### Alpha diversity ######
 plot_richness(colombia_rare) 
 
-plot_richness(colombia_rare, measures = c("Shannon","Chao1")) 
+plot_richness(colombia_rare, measures = c("Shannon")) 
 
-gg_richness <- plot_richness(colombia_rare, x = "diabetic_status", measures = c("Shannon","Chao1")) +
+gg_richness <- plot_richness(colombia_rare, x = "diabetic_status", measures = c("Shannon")) +
   xlab("Diabetic Status") +
   geom_boxplot()
 gg_richness
@@ -32,18 +34,26 @@ estimate_richness(colombia_rare)
 phylo_dist <- pd(t(otu_table(colombia_rare)), phy_tree(colombia_rare),
                  include.root=F) 
 
-# add PD to metadata table
+# add PD to metadata table and add stats
 sample_data(colombia_rare)$PD <- phylo_dist$PD
 
+metadata_PD <- data.frame(sample_data(colombia_rare))
+faith_pd_data <- cbind(metadata_PD, phylo_dist$PD)
+faith_pd_data
+kruskal.test(phylo_dist$PD ~ diabetic_status, data = faith_pd_data)
+
+pairwise.wilcox.test(faith_pd_data$`phylo_dist$PD`, faith_pd_data$diabetic_status,
+                     p.adjust.method = "BH")
+
 # plot any metadata category against the PD
-plot.pd <- ggplot(sample_data(colombia_rare), aes(diabetic_status, PD)) + 
-  geom_boxplot() +
-  xlab("Diabetic Status") +
-  ylab("Phylogenetic Diversity")
+plot_pd <- ggplot(sample_data(colombia_rare), aes(diabetic_status, phylo_dist$PD)) + xlab("Diabetic Status") + ylab("Phylogenetic Diversity") + geom_boxplot() + stat_compare_means(comparisons = list(c("Diabetic", "Pre-diabetic"), c("Pre-diabetic", "Non-diabetic"), c("Diabetic", "Non-diabetic")), method = "wilcox.test", label = "p.signif")
 
 # view plot
-plot.pd
+plot_pd
 
+kruskal.test( PD ~ diabetic_status, data=PD_meta)
+
+ggsave(filename = "data/aim2/plot_PD_stats.png", plot_pd)
 
 #### Beta diversity #####
 bc_dm <- distance(colombia_rare, method="bray")
@@ -108,5 +118,26 @@ log_bar_plot<-ggplot(sigASVs) +
   geom_errorbar(aes(x=Genus, ymin=log2FoldChange-lfcSE, ymax=log2FoldChange+lfcSE)) +
   theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
 
+log_bar_plot
+
 ggsave(filename="data/aim2/log_bar_plot.png",log_bar_plot)
+
+#### Indicator Species/Taxa Analysis ####
+# glom to Genus
+colombia_genus <- tax_glom(colombia_final, "Genus", NArm = FALSE)
+colombia_genus_RA <- transform_sample_counts(colombia_genus, fun=function(x) x/sum(x))
+
+#ISA
+isa_colombia <- multipatt(t(otu_table(colombia_genus_RA)), cluster = sample_data(colombia_genus_RA)$`diabetic_status`)
+summary(isa_colombia)
+taxtable <- tax_table(colombia_final) %>% as.data.frame() %>% rownames_to_column(var="ASV")
+
+# consider that your table is only going to be resolved up to the genus level, be wary of 
+# anything beyond the glomed taxa level
+isa_table<-isa_colombia$sign %>%
+  rownames_to_column(var="ASV") %>%
+  left_join(taxtable) %>%
+  filter(p.value<0.05) %>% View()
+
+ggsave(filename="data/aim2/isa_table.png",isa_table)
 
