@@ -11,11 +11,11 @@
 
 **Colombia dataset only - qiime processing:** [Metadata clean up](scripts/colombia-metadata-cleanup.R), [Qiime2 taxonomic and diversity analysis](scripts/colombia-qiime2-analysis.sh), [Export files](scripts/colombia_export.sh), [Make phyloseq object](scripts/Phyloseq_obj.R)
 
-**Aim 2 diabetic status differences:** 
+**Aim 2 diabetic status differences:** [script](scripts/Deseq.R), [data files](data/aim2)
 
-**Aim 3 sex differences:**
+**Aim 3 sex differences:** [script and data files](data/Aim3)
 
-**Aim 4 functional differences:**
+**Aim 4 functional differences:** [scripts](scripts/Aim4), [data files](data/Aim4)
 
 ## Gantt Chart
 <img src="/meeting-minutes/gantt-chart.jpg" >
