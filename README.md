@@ -13,7 +13,7 @@
 
 **Aim 2 diabetic status differences:** [script](scripts/Deseq.R), [data files](data/aim2)
 
-**Aim 3 sex differences:** [script and data files](data/Aim3)
+**Aim 3 sex differences:** [scripts](scripts/Aim3), [data files](data/Aim3)
 
 **Aim 4 functional differences:** [scripts](scripts/Aim4), [data files](data/Aim4)
 
