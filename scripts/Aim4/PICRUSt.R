@@ -47,7 +47,7 @@ metadata <- read_delim("data/colombia_export/metadata.tsv")
 #If you have multiple variants, filter your metadata to include only 2 at a time
 
 #Remove NAs for your column of interest in this case subject
-metadata = metadata[!is.na(metadata$subject),]
+metadata = metadata[!is.na(metadata$diabetic_status_and_sex)]
 
 #Filtering the abundance table to only include samples that are in the filtered metadata
 sample_names = metadata$'sample-id'
