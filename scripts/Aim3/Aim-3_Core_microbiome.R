@@ -4,7 +4,9 @@ library(phyloseq)
 library(microbiome)
 library(ggVennDiagram)
 
-colombia_meta <- read_tsv("metadata.tsv")
+colombia_meta <- read_tsv("data/fixed_colombia_diabetes_metadata.tsv")
+
+load("./data/colombia_final.RData")
 
 # Convert to relative abundance
 colombia_RA <- transform_sample_counts(colombia_final, fun=function(x) x/sum(x))
@@ -30,38 +32,38 @@ nd_m_ASVs <- core_members(nd_m, detection=0.001, prevalence = 0.8)
 # Venn-diagram pre-diabetic female vs. diabetic female
 d_pd_f_core_microbiome <- ggVennDiagram(x=list(
   "Pre-diabetic Female" = pd_f_ASVs, 
-  "Diabetic Female" = d_f_ASVs)) 
+  "Diabetic Female" = d_f_ASVs)) + coord_flip()
 d_pd_f_core_microbiome
 
 # Venn-diagram pre-diabetic male vs. diabetic male
 d_pd_m_core_microbiome <- ggVennDiagram(x=list(
   "Pre-diabetic Male" = pd_m_ASVs, 
-  "Diabetic Male" = d_m_ASVs)) 
+  "Diabetic Male" = d_m_ASVs)) + coord_flip()
 d_pd_m_core_microbiome
 
 # Venn-diagram diabetic female vs. diabetic male
 d_m_f_core_microbiome <- ggVennDiagram(x=list(
   "Diabetic Male" = d_m_ASVs, 
-  "Diabetic Female" = d_f_ASVs)) 
+  "Diabetic Female" = d_f_ASVs)) + coord_flip()
 d_m_f_core_microbiome
 
 # Venn-diagram pre-diabetic female vs. pre-diabetic male
 pd_m_f_core_microbiome <- ggVennDiagram(x=list(
   "Pre-diabetic Male" = pd_m_ASVs, 
-  "Pre-diabetic Female" = pd_f_ASVs)) 
+  "Pre-diabetic Female" = pd_f_ASVs)) + coord_flip()
 pd_m_f_core_microbiome
 
 # Venn-diagram non-diabetic female vs. non-diabetic male
 nd_m_f_core_microbiome <- ggVennDiagram(x=list(
   "Non-diabetic Male" = nd_m_ASVs, 
-  "Non-diabetic Female" = nd_f_ASVs)) 
+  "Non-diabetic Female" = nd_f_ASVs)) + coord_flip()
 nd_m_f_core_microbiome
 
-ggsave("d_pd_f_core_microbiome.png", d_pd_f_core_microbiome, height = 12, width = 15)
-ggsave("d_pd_m_core_microbiome.png", d_pd_m_core_microbiome, height = 12, width = 15)
-ggsave("d_m_f_core_microbiome.png", d_m_f_core_microbiome, height = 12, width = 15)
-ggsave("pd_m_f_core_microbiome.png", pd_m_f_core_microbiome, height = 12, width = 15)
-ggsave("nd_m_f_core_microbiome.png", nd_m_f_core_microbiome, height = 12, width = 15)
+ggsave("./data/Aim3/d_pd_f_core_microbiome.png", d_pd_f_core_microbiome, height = 12, width = 15)
+ggsave("./data/Aim3/d_pd_m_core_microbiome.png", d_pd_m_core_microbiome, height = 12, width = 15)
+ggsave("./data/Aim3/d_m_f_core_microbiome.png", d_m_f_core_microbiome, height = 12, width = 15)
+ggsave("./data/Aim3/pd_m_f_core_microbiome.png", pd_m_f_core_microbiome, height = 12, width = 15)
+ggsave("./data/Aim3/nd_m_f_core_microbiome.png", nd_m_f_core_microbiome, height = 12, width = 15)
 
 # Determine identity of ASVs and plot - diabetic female vs. diabetic male
 prune_taxa(d_f_ASVs,d_f) %>%
