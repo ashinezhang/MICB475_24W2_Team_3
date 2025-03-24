@@ -123,7 +123,7 @@ colnames(abundance_d_nd_f)[1] = "feature"
 abundance_desc_d_nd_f = inner_join(abundance_d_nd_f,metacyc_daa_annotated_results_df_d_nd_f, by = "feature")
 abundance_desc_d_nd_f$feature = abundance_desc_d_nd_f$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_d_nd_f = abundance_desc_d_nd_f[,-c(34:ncol(abundance_desc_d_nd_f))] 
+abundance_desc_d_nd_f = abundance_desc_d_nd_f[,-c(165:ncol(abundance_desc_d_nd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_d_nd_f <- pathway_heatmap(abundance = abundance_desc_d_nd_f %>% column_to_rownames("feature"), metadata = metadata_d_nd_f, group = "diabetic_status_and_sex")
@@ -224,7 +224,7 @@ colnames(abundance_d_pd_f)[1] = "feature"
 abundance_desc_d_pd_f = inner_join(abundance_d_pd_f,metacyc_daa_annotated_results_df_d_pd_f, by = "feature")
 abundance_desc_d_pd_f$feature = abundance_desc_d_pd_f$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_d_pd_f = abundance_desc_d_pd_f[,-c(34:ncol(abundance_desc_d_pd_f))] 
+abundance_desc_d_pd_f = abundance_desc_d_pd_f[,-c(73:ncol(abundance_desc_d_pd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_d_pd_f <- pathway_heatmap(abundance = abundance_desc_d_pd_f %>% column_to_rownames("feature"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
@@ -330,7 +330,7 @@ colnames(abundance_pd_nd_f)[1] = "feature"
 abundance_desc_pd_nd_f = inner_join(abundance_pd_nd_f,metacyc_daa_annotated_results_df_pd_nd_f, by = "feature")
 abundance_desc_pd_nd_f$feature = abundance_desc_pd_nd_f$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_pd_nd_f = abundance_desc_pd_nd_f[,-c(34:ncol(abundance_desc_pd_nd_f))] 
+abundance_desc_pd_nd_f = abundance_desc_pd_nd_f[,-c(220:ncol(abundance_desc_pd_nd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_nd_f <- pathway_heatmap(abundance = abundance_desc_pd_nd_f %>% column_to_rownames("feature"), metadata = metadata_pd_nd_f, group = "diabetic_status_and_sex")
@@ -433,7 +433,7 @@ colnames(abundance_d_nd_m)[1] = "feature"
 abundance_desc_d_nd_m = inner_join(abundance_d_nd_m,metacyc_daa_annotated_results_df_d_nd_m, by = "feature")
 abundance_desc_d_nd_m$feature = abundance_desc_d_nd_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_d_nd_m = abundance_desc_d_nd_m[,-c(34:ncol(abundance_desc_d_nd_m))] 
+abundance_desc_d_nd_m = abundance_desc_d_nd_m[,-c(149:ncol(abundance_desc_d_nd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_nd_m <- pathway_heatmap(abundance = abundance_desc_d_nd_m %>% column_to_rownames("feature"), metadata = metadata_d_nd_m, group = "diabetic_status_and_sex")
@@ -536,7 +536,7 @@ colnames(abundance_d_pd_m)[1] = "feature"
 abundance_desc_d_pd_m = inner_join(abundance_d_pd_m,metacyc_daa_annotated_results_df_d_pd_m, by = "feature")
 abundance_desc_d_pd_m$feature = abundance_desc_d_pd_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_d_pd_m = abundance_desc_d_pd_m[,-c(34:ncol(abundance_desc_d_pd_m))] 
+abundance_desc_d_pd_m = abundance_desc_d_pd_m[,-c(74:ncol(abundance_desc_d_pd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_pd_m <- pathway_heatmap(abundance = abundance_desc_d_pd_m %>% column_to_rownames("feature"), metadata = metadata_d_pd_m, group = "diabetic_status_and_sex")
@@ -637,7 +637,7 @@ colnames(abundance_pd_nd_m)[1] = "feature"
 abundance_desc_pd_nd_m = inner_join(abundance_pd_nd_m,metacyc_daa_annotated_results_df_pd_nd_m, by = "feature")
 abundance_desc_pd_nd_m$feature = abundance_desc_pd_nd_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_pd_nd_m = abundance_desc_pd_nd_m[,-c(34:ncol(abundance_desc_pd_nd_m))] 
+abundance_desc_pd_nd_m = abundance_desc_pd_nd_m[,-c(201:ncol(abundance_desc_pd_nd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_nd_m <- pathway_heatmap(abundance = abundance_desc_pd_nd_m %>% column_to_rownames("feature"), metadata = metadata_pd_nd_m, group = "diabetic_status_and_sex")
@@ -738,7 +738,7 @@ colnames(abundance_d_f_m)[1] = "feature"
 abundance_desc_d_f_m = inner_join(abundance_d_f_m,metacyc_daa_annotated_results_df_d_f_m, by = "feature")
 abundance_desc_d_f_m$feature = abundance_desc_d_f_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_d_f_m = abundance_desc_d_f_m[,-c(34:ncol(abundance_desc_d_f_m))] 
+abundance_desc_d_f_m = abundance_desc_d_f_m[,-c(20:ncol(abundance_desc_d_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_f_m <- pathway_heatmap(abundance = abundance_desc_d_f_m %>% column_to_rownames("feature"), metadata = metadata_d_f_m, group = "diabetic_status_and_sex")
@@ -839,7 +839,7 @@ colnames(abundance_pd_f_m)[1] = "feature"
 abundance_desc_pd_f_m = inner_join(abundance_pd_f_m,metacyc_daa_annotated_results_df_pd_f_m, by = "feature")
 abundance_desc_pd_f_m$feature = abundance_desc_pd_f_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_pd_f_m = abundance_desc_pd_f_m[,-c(34:ncol(abundance_desc_pd_f_m))] 
+abundance_desc_pd_f_m = abundance_desc_pd_f_m[,-c(127:ncol(abundance_desc_pd_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_f_m <- pathway_heatmap(abundance = abundance_desc_pd_f_m %>% column_to_rownames("feature"), metadata = metadata_pd_f_m, group = "diabetic_status_and_sex")
@@ -940,7 +940,7 @@ colnames(abundance_nd_f_m)[1] = "feature"
 abundance_desc_nd_f_m = inner_join(abundance_nd_f_m,metacyc_daa_annotated_results_df_nd_f_m, by = "feature")
 abundance_desc_nd_f_m$feature = abundance_desc_nd_f_m$description
 #this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
-abundance_desc_nd_f_m = abundance_desc_nd_f_m[,-c(34:ncol(abundance_desc_nd_f_m))] 
+abundance_desc_nd_f_m = abundance_desc_nd_f_m[,-c(294:ncol(abundance_desc_nd_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_nd_f_m <- pathway_heatmap(abundance = abundance_desc_nd_f_m %>% column_to_rownames("feature"), metadata = metadata_nd_f_m, group = "diabetic_status_and_sex")
