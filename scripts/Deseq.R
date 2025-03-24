@@ -61,19 +61,27 @@ ggsave(filename = "data/aim2/plot_PD_stats.png", plot_pd)
 bc_dm <- distance(colombia_rare, method="weighted_unifrac")
 
 pcoa_bc <- ordinate(colombia_rare, method="PCoA", distance=bc_dm)
+ordination_df <- as.data.frame(pcoa_bc$vectors)
+
 
 plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_Status")
 
-#Stats
+#Permanova
 dm_unifrac <- UniFrac(colombia_rare, weighted=TRUE) # Weighted UniFrac
-dat <- as.data.frame(sample_data(colombia_rare))
-dat$diabetic_status <- as.factor(dat$diabetic_status)
-adonis2(dm_unifrac ~ diabetic_status*sex, data=dat)
+data <- as(sample_data(colombia_rare), "data.frame")
+adonis_results<-adonis2(dm_unifrac ~ diabetic_status*sex, data=data)
+adonis2(dm_unifrac ~ diabetic_status, data=data)
+R2_value <- round(adonis_results$R2[1], 3)
+p_value <- adonis_results$`Pr(>F)`[1]
 
-#IDK HOW TO FIX THE STATS
 
 gg_pcoa <- plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_status") +
-  labs(pch="Diabetic Status #", col = "sex")
+  labs(pch="Diabetic Status #", col = "sex")+
+  annotate(geom ="text", 
+         x = min(ordination_df$Axis.1), 
+         y = max(ordination_df$Axis.2), 
+         label = paste("PERMANOVA: R² =", R2_value, "\n p =", p_value), 
+         hjust = 0, size = 3)
 gg_pcoa
 
 ggsave("data/aim2/plot_pcoa.png"
@@ -147,8 +155,10 @@ taxtable <- tax_table(colombia_final) %>% as.data.frame() %>% rownames_to_column
 isa_table<-isa_colombia$sign %>%
   rownames_to_column(var="ASV") %>%
   left_join(taxtable) %>%
-  filter(p.value<0.05) %>% View()
+  filter(p.value<0.05) 
+isa_table
+isa_table<-as.data.frame(isa_table)
 
-ggsave(filename="data/aim2/isa_table.png",isa_table)
+write.csv(isa_table, file = "data/aim2/isa_table.csv", row.names = FALSE)
 
 
