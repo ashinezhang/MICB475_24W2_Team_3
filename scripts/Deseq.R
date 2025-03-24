@@ -6,7 +6,9 @@ library(tidyverse)
 library(picante)
 library(DESeq2)
 library(indicspecies)
-
+library(vegan)
+library(reshape2)
+library(pheatmap)
 #Alpha and Beta Diversity
 #### Load in RData ####
 load("data/colombia_rare.RData")
@@ -56,11 +58,19 @@ kruskal.test( PD ~ diabetic_status, data=PD_meta)
 ggsave(filename = "data/aim2/plot_PD_stats.png", plot_pd)
 
 #### Beta diversity #####
-bc_dm <- distance(colombia_rare, method="bray")
+bc_dm <- distance(colombia_rare, method="weighted_unifrac")
 
 pcoa_bc <- ordinate(colombia_rare, method="PCoA", distance=bc_dm)
 
 plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_Status")
+
+#Stats
+dm_unifrac <- UniFrac(colombia_rare, weighted=TRUE) # Weighted UniFrac
+dat <- as.data.frame(sample_data(colombia_rare))
+dat$diabetic_status <- as.factor(dat$diabetic_status)
+adonis2(dm_unifrac ~ diabetic_status*sex, data=dat)
+
+#IDK HOW TO FIX THE STATS
 
 gg_pcoa <- plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_status") +
   labs(pch="Diabetic Status #", col = "sex")
@@ -140,4 +150,5 @@ isa_table<-isa_colombia$sign %>%
   filter(p.value<0.05) %>% View()
 
 ggsave(filename="data/aim2/isa_table.png",isa_table)
+
 
