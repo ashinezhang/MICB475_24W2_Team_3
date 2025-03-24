@@ -122,21 +122,11 @@ abundance_d_nd_f = abundance_data_filtered_d_nd_f %>% filter(pathway %in% featur
 colnames(abundance_d_nd_f)[1] = "feature"
 abundance_desc_d_nd_f = inner_join(abundance_d_nd_f,metacyc_daa_annotated_results_df_d_nd_f, by = "feature")
 abundance_desc_d_nd_f$feature = abundance_desc_d_nd_f$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_d_nd_f = abundance_desc_d_nd_f[,-c(165:ncol(abundance_desc_d_nd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_d_nd_f <- pathway_heatmap(abundance = abundance_desc_d_nd_f %>% column_to_rownames("feature"), metadata = metadata_d_nd_f, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_nd_f)[colnames(metadata_d_nd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_nd_f <-pathway_pca(abundance = abundance_data_filtered_d_nd_f %>% column_to_rownames("pathway"), metadata = metadata_d_nd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -164,6 +154,7 @@ Log2FC_d_nd_f <- ggplot(data = sig_res_d_nd_f, aes(y = reorder(description, sort
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_nd_f.png", pathway_heatmap_d_nd_f, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_d_nd_f.png", Log2FC_d_nd_f, width = 15, height = 10)
+
 
 
 #### 2. diabetic female vs pre-diabetic female
@@ -223,21 +214,11 @@ abundance_d_pd_f = abundance_data_filtered_d_pd_f %>% filter(pathway %in% featur
 colnames(abundance_d_pd_f)[1] = "feature"
 abundance_desc_d_pd_f = inner_join(abundance_d_pd_f,metacyc_daa_annotated_results_df_d_pd_f, by = "feature")
 abundance_desc_d_pd_f$feature = abundance_desc_d_pd_f$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_d_pd_f = abundance_desc_d_pd_f[,-c(73:ncol(abundance_desc_d_pd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_d_pd_f <- pathway_heatmap(abundance = abundance_desc_d_pd_f %>% column_to_rownames("feature"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -265,10 +246,6 @@ Log2FC_d_pd_f <- ggplot(data = sig_res_d_pd_f, aes(y = reorder(description, sort
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_pd_f.png", pathway_heatmap_d_pd_f, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_d_pd_f.png", Log2FC_d_pd_f, width = 15, height = 10)
-
-
-
-
 
 
 
@@ -329,21 +306,11 @@ abundance_pd_nd_f = abundance_data_filtered_pd_nd_f %>% filter(pathway %in% feat
 colnames(abundance_pd_nd_f)[1] = "feature"
 abundance_desc_pd_nd_f = inner_join(abundance_pd_nd_f,metacyc_daa_annotated_results_df_pd_nd_f, by = "feature")
 abundance_desc_pd_nd_f$feature = abundance_desc_pd_nd_f$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_pd_nd_f = abundance_desc_pd_nd_f[,-c(220:ncol(abundance_desc_pd_nd_f))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_nd_f <- pathway_heatmap(abundance = abundance_desc_pd_nd_f %>% column_to_rownames("feature"), metadata = metadata_pd_nd_f, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -371,7 +338,6 @@ Log2FC_pd_nd_f <- ggplot(data = sig_res_pd_nd_f, aes(y = reorder(description, so
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_pd_nd_f.png", pathway_heatmap_pd_nd_f, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_pd_nd_f.png", Log2FC_pd_nd_f, width = 15, height = 10)
-
 
 
 
@@ -432,21 +398,11 @@ abundance_d_nd_m = abundance_data_filtered_d_nd_m %>% filter(pathway %in% featur
 colnames(abundance_d_nd_m)[1] = "feature"
 abundance_desc_d_nd_m = inner_join(abundance_d_nd_m,metacyc_daa_annotated_results_df_d_nd_m, by = "feature")
 abundance_desc_d_nd_m$feature = abundance_desc_d_nd_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_d_nd_m = abundance_desc_d_nd_m[,-c(149:ncol(abundance_desc_d_nd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_nd_m <- pathway_heatmap(abundance = abundance_desc_d_nd_m %>% column_to_rownames("feature"), metadata = metadata_d_nd_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -474,7 +430,6 @@ Log2FC_d_nd_m <- ggplot(data = sig_res_d_nd_m, aes(y = reorder(description, sort
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_nd_m.png", pathway_heatmap_d_nd_m, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_d_nd_m.png", Log2FC_d_nd_m, width = 15, height = 10)
-
 
 
 
@@ -535,21 +490,11 @@ abundance_d_pd_m = abundance_data_filtered_d_pd_m %>% filter(pathway %in% featur
 colnames(abundance_d_pd_m)[1] = "feature"
 abundance_desc_d_pd_m = inner_join(abundance_d_pd_m,metacyc_daa_annotated_results_df_d_pd_m, by = "feature")
 abundance_desc_d_pd_m$feature = abundance_desc_d_pd_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset. 74 represents the number of samples in the filtered abundance table
 abundance_desc_d_pd_m = abundance_desc_d_pd_m[,-c(74:ncol(abundance_desc_d_pd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_pd_m <- pathway_heatmap(abundance = abundance_desc_d_pd_m %>% column_to_rownames("feature"), metadata = metadata_d_pd_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -577,6 +522,7 @@ Log2FC_d_pd_m <- ggplot(data = sig_res_d_pd_m, aes(y = reorder(description, sort
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_pd_m.png", pathway_heatmap_d_pd_m, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_d_pd_m.png", Log2FC_d_pd_m, width = 15, height = 10)
+
 
 
 #### 6. pre-diabetic male vs non-diabetic male
@@ -636,21 +582,11 @@ abundance_pd_nd_m = abundance_data_filtered_pd_nd_m %>% filter(pathway %in% feat
 colnames(abundance_pd_nd_m)[1] = "feature"
 abundance_desc_pd_nd_m = inner_join(abundance_pd_nd_m,metacyc_daa_annotated_results_df_pd_nd_m, by = "feature")
 abundance_desc_pd_nd_m$feature = abundance_desc_pd_nd_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset. 201 represents the number of samples in the filtered abundance table
 abundance_desc_pd_nd_m = abundance_desc_pd_nd_m[,-c(201:ncol(abundance_desc_pd_nd_m))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_nd_m <- pathway_heatmap(abundance = abundance_desc_pd_nd_m %>% column_to_rownames("feature"), metadata = metadata_pd_nd_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -678,6 +614,7 @@ Log2FC_pd_nd_m <- ggplot(data = sig_res_pd_nd_m, aes(y = reorder(description, so
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_pd_nd_m.png", pathway_heatmap_pd_nd_m, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_pd_nd_m.png", Log2FC_pd_nd_m, width = 15, height = 10)
+
 
 
 #### 7. diabetic male vs diabetic female
@@ -737,21 +674,11 @@ abundance_d_f_m = abundance_data_filtered_d_f_m %>% filter(pathway %in% feature_
 colnames(abundance_d_f_m)[1] = "feature"
 abundance_desc_d_f_m = inner_join(abundance_d_f_m,metacyc_daa_annotated_results_df_d_f_m, by = "feature")
 abundance_desc_d_f_m$feature = abundance_desc_d_f_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset. 20 represents the number of samples in the filtered abundance table
 abundance_desc_d_f_m = abundance_desc_d_f_m[,-c(20:ncol(abundance_desc_d_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_d_f_m <- pathway_heatmap(abundance = abundance_desc_d_f_m %>% column_to_rownames("feature"), metadata = metadata_d_f_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -779,6 +706,7 @@ Log2FC_d_f_m <- ggplot(data = sig_res_d_f_m, aes(y = reorder(description, sort(a
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_f_m.png", pathway_heatmap_d_f_m, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_d_f_m.png", Log2FC_d_f_m, width = 15, height = 10)
+
 
 
 #### 8. pre-diabetic male vs pre-diabetic female
@@ -838,21 +766,11 @@ abundance_pd_f_m = abundance_data_filtered_pd_f_m %>% filter(pathway %in% featur
 colnames(abundance_pd_f_m)[1] = "feature"
 abundance_desc_pd_f_m = inner_join(abundance_pd_f_m,metacyc_daa_annotated_results_df_pd_f_m, by = "feature")
 abundance_desc_pd_f_m$feature = abundance_desc_pd_f_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_pd_f_m = abundance_desc_pd_f_m[,-c(127:ncol(abundance_desc_pd_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_pd_f_m <- pathway_heatmap(abundance = abundance_desc_pd_f_m %>% column_to_rownames("feature"), metadata = metadata_pd_f_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
@@ -880,6 +798,7 @@ Log2FC_pd_f_m <- ggplot(data = sig_res_pd_f_m, aes(y = reorder(description, sort
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_pd_f_m.png", pathway_heatmap_pd_f_m, width = 15, height = 10)
 ggsave(filename="data/Aim4/Log2FC_pd_f_m.png", Log2FC_pd_f_m, width = 15, height = 10)
+
 
 
 #### 9. non-diabetic male vs non-diabetic female
@@ -939,21 +858,11 @@ abundance_nd_f_m = abundance_data_filtered_nd_f_m %>% filter(pathway %in% featur
 colnames(abundance_nd_f_m)[1] = "feature"
 abundance_desc_nd_f_m = inner_join(abundance_nd_f_m,metacyc_daa_annotated_results_df_nd_f_m, by = "feature")
 abundance_desc_nd_f_m$feature = abundance_desc_nd_f_m$description
-#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+#this line will change for each dataset.  represents the number of samples in the filtered abundance table
 abundance_desc_nd_f_m = abundance_desc_nd_f_m[,-c(294:ncol(abundance_desc_nd_f_m))] 
 
 # Generate a heatmap
 pathway_heatmap_nd_f_m <- pathway_heatmap(abundance = abundance_desc_nd_f_m %>% column_to_rownames("feature"), metadata = metadata_nd_f_m, group = "diabetic_status_and_sex")
-
-
-
-### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
-colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
-### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
-# Generate pathway PCA plot
-pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
-
-
 
 # Generating a bar plot representing log2FC from the custom deseq2 function
 # Go to the Deseq2 function script and update the metadata category of interest
