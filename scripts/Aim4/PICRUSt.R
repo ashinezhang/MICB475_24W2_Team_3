@@ -376,23 +376,609 @@ ggsave(filename="data/Aim4/Log2FC_pd_nd_f.png", Log2FC_pd_nd_f, width = 15, heig
 
 
 #### 4. diabetic male vs non-diabetic male
-metadata_d_nd_m <- filter(metadata, diabetic_status_and_sex == "Diabetic_male" | diabetic_status_and_sex == "Non-diabetic_female")
+metadata_d_nd_m <- filter(metadata, diabetic_status_and_sex == "Diabetic_male" | diabetic_status_and_sex == "Non-diabetic_male")
+
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_d_nd_m = metadata_d_nd_m$'sample-id'
+sample_names_d_nd_m = append(sample_names_d_nd_m, "pathway")
+abundance_data_filtered_d_nd_m = abundance_data[, colnames(abundance_data) %in% sample_names_d_nd_m] 
+
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_d_nd_m = abundance_data_filtered_d_nd_m[, colSums(abundance_data_filtered_d_nd_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_d_nd_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_d_nd_m = rownames(t(abundance_data_filtered_d_nd_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_d_nd_m)
+metadata_sample_ids <- metadata_d_nd_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_d_nd_m <- abundance_data_filtered_d_nd_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_d_nd_m <- pathway_daa(abundance = abundance_data_filtered_d_nd_m %>% column_to_rownames("pathway"), 
+                                                metadata = metadata_d_nd_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_d_nd_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                               daa_results_df = abundance_daa_results_df_d_nd_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_d_nd_m <- abundance_daa_results_df_d_nd_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_d_nd_m = inner_join(feature_with_p_0.05_d_nd_m,metacyc_daa_annotated_results_df_d_nd_m, by = "feature")
+feature_desc_d_nd_m$feature = feature_desc_d_nd_m$description
+feature_desc_d_nd_m = feature_desc_d_nd_m[,c(1:7)]
+colnames(feature_desc_d_nd_m) = colnames(feature_with_p_0.05_d_nd_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_d_nd_m = abundance_data_filtered_d_nd_m %>% filter(pathway %in% feature_with_p_0.05_d_nd_m$feature)
+colnames(abundance_d_nd_m)[1] = "feature"
+abundance_desc_d_nd_m = inner_join(abundance_d_nd_m,metacyc_daa_annotated_results_df_d_nd_m, by = "feature")
+abundance_desc_d_nd_m$feature = abundance_desc_d_nd_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_d_nd_m = abundance_desc_d_nd_m[,-c(34:ncol(abundance_desc_d_nd_m))] 
+
+# Generate a heatmap
+pathway_heatmap_d_nd_m <- pathway_heatmap(abundance = abundance_desc_d_nd_m %>% column_to_rownames("feature"), metadata = metadata_d_nd_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_d_nd_m =  DEseq2_function(abundance_data_filtered_d_nd_m, metadata_d_nd_m, "diabetic_status_and_sex")
+res_d_nd_m$feature =rownames(res_d_nd_m)
+res_desc_d_nd_m = inner_join(res_d_nd_m,metacyc_daa_annotated_results_df_d_nd_m, by = "feature")
+res_desc_d_nd_m = res_desc_d_nd_m[, -c(8:13)]
+View(res_desc_d_nd_m)
+
+# Filter to only include significant pathways
+sig_res_d_nd_m = res_desc_d_nd_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_d_nd_m <- sig_res_d_nd_m[order(sig_res_d_nd_m$log2FoldChange),]
+Log2FC_d_nd_m <- ggplot(data = sig_res_d_nd_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_d_nd_m.png", pathway_heatmap_d_nd_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_d_nd_m.png", Log2FC_d_nd_m, width = 15, height = 10)
+
+
+
 
 #### 5. diabetic male vs pre-diabetic male
-metadata_d_pd_m <- filter(metadata, diabetic_status_and_sex == "Diabetic_male" | diabetic_status_and_sex == "Pre-diabetic_female")
+metadata_d_pd_m <- filter(metadata, diabetic_status_and_sex == "Diabetic_male" | diabetic_status_and_sex == "Pre-diabetic_male")
+
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_d_pd_m = metadata_d_pd_m$'sample-id'
+sample_names_d_pd_m = append(sample_names_d_pd_m, "pathway")
+abundance_data_filtered_d_pd_m = abundance_data[, colnames(abundance_data) %in% sample_names_d_pd_m] 
+
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_d_pd_m = abundance_data_filtered_d_pd_m[, colSums(abundance_data_filtered_d_pd_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_d_pd_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_d_pd_m = rownames(t(abundance_data_filtered_d_pd_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_d_pd_m)
+metadata_sample_ids <- metadata_d_pd_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_d_pd_m <- abundance_data_filtered_d_pd_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_d_pd_m <- pathway_daa(abundance = abundance_data_filtered_d_pd_m %>% column_to_rownames("pathway"), 
+                                                metadata = metadata_d_pd_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_d_pd_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                               daa_results_df = abundance_daa_results_df_d_pd_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_d_pd_m <- abundance_daa_results_df_d_pd_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_d_pd_m = inner_join(feature_with_p_0.05_d_pd_m,metacyc_daa_annotated_results_df_d_pd_m, by = "feature")
+feature_desc_d_pd_m$feature = feature_desc_d_pd_m$description
+feature_desc_d_pd_m = feature_desc_d_pd_m[,c(1:7)]
+colnames(feature_desc_d_pd_m) = colnames(feature_with_p_0.05_d_pd_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_d_pd_m = abundance_data_filtered_d_pd_m %>% filter(pathway %in% feature_with_p_0.05_d_pd_m$feature)
+colnames(abundance_d_pd_m)[1] = "feature"
+abundance_desc_d_pd_m = inner_join(abundance_d_pd_m,metacyc_daa_annotated_results_df_d_pd_m, by = "feature")
+abundance_desc_d_pd_m$feature = abundance_desc_d_pd_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_d_pd_m = abundance_desc_d_pd_m[,-c(34:ncol(abundance_desc_d_pd_m))] 
+
+# Generate a heatmap
+pathway_heatmap_d_pd_m <- pathway_heatmap(abundance = abundance_desc_d_pd_m %>% column_to_rownames("feature"), metadata = metadata_d_pd_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_d_pd_m =  DEseq2_function(abundance_data_filtered_d_pd_m, metadata_d_pd_m, "diabetic_status_and_sex")
+res_d_pd_m$feature =rownames(res_d_pd_m)
+res_desc_d_pd_m = inner_join(res_d_pd_m,metacyc_daa_annotated_results_df_d_pd_m, by = "feature")
+res_desc_d_pd_m = res_desc_d_pd_m[, -c(8:13)]
+View(res_desc_d_pd_m)
+
+# Filter to only include significant pathways
+sig_res_d_pd_m = res_desc_d_pd_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_d_pd_m <- sig_res_d_pd_m[order(sig_res_d_pd_m$log2FoldChange),]
+Log2FC_d_pd_m <- ggplot(data = sig_res_d_pd_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_d_pd_m.png", pathway_heatmap_d_pd_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_d_pd_m.png", Log2FC_d_pd_m, width = 15, height = 10)
+
 
 #### 6. pre-diabetic male vs non-diabetic male
 metadata_pd_nd_m <- filter(metadata, diabetic_status_and_sex == "Pre-diabetic_male" | diabetic_status_and_sex == "Non-diabetic_male")
 
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_pd_nd_m = metadata_pd_nd_m$'sample-id'
+sample_names_pd_nd_m = append(sample_names_pd_nd_m, "pathway")
+abundance_data_filtered_pd_nd_m = abundance_data[, colnames(abundance_data) %in% sample_names_pd_nd_m] 
 
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_pd_nd_m = abundance_data_filtered_pd_nd_m[, colSums(abundance_data_filtered_pd_nd_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_pd_nd_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_pd_nd_m = rownames(t(abundance_data_filtered_pd_nd_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_pd_nd_m)
+metadata_sample_ids <- metadata_pd_nd_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_pd_nd_m <- abundance_data_filtered_pd_nd_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_pd_nd_m <- pathway_daa(abundance = abundance_data_filtered_pd_nd_m %>% column_to_rownames("pathway"), 
+                                                metadata = metadata_pd_nd_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_pd_nd_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                               daa_results_df = abundance_daa_results_df_pd_nd_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_pd_nd_m <- abundance_daa_results_df_pd_nd_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_pd_nd_m = inner_join(feature_with_p_0.05_pd_nd_m,metacyc_daa_annotated_results_df_pd_nd_m, by = "feature")
+feature_desc_pd_nd_m$feature = feature_desc_pd_nd_m$description
+feature_desc_pd_nd_m = feature_desc_pd_nd_m[,c(1:7)]
+colnames(feature_desc_pd_nd_m) = colnames(feature_with_p_0.05_pd_nd_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_pd_nd_m = abundance_data_filtered_pd_nd_m %>% filter(pathway %in% feature_with_p_0.05_pd_nd_m$feature)
+colnames(abundance_pd_nd_m)[1] = "feature"
+abundance_desc_pd_nd_m = inner_join(abundance_pd_nd_m,metacyc_daa_annotated_results_df_pd_nd_m, by = "feature")
+abundance_desc_pd_nd_m$feature = abundance_desc_pd_nd_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_pd_nd_m = abundance_desc_pd_nd_m[,-c(34:ncol(abundance_desc_pd_nd_m))] 
+
+# Generate a heatmap
+pathway_heatmap_pd_nd_m <- pathway_heatmap(abundance = abundance_desc_pd_nd_m %>% column_to_rownames("feature"), metadata = metadata_pd_nd_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_pd_nd_m =  DEseq2_function(abundance_data_filtered_pd_nd_m, metadata_pd_nd_m, "diabetic_status_and_sex")
+res_pd_nd_m$feature =rownames(res_pd_nd_m)
+res_desc_pd_nd_m = inner_join(res_pd_nd_m,metacyc_daa_annotated_results_df_pd_nd_m, by = "feature")
+res_desc_pd_nd_m = res_desc_pd_nd_m[, -c(8:13)]
+View(res_desc_pd_nd_m)
+
+# Filter to only include significant pathways
+sig_res_pd_nd_m = res_desc_pd_nd_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_pd_nd_m <- sig_res_pd_nd_m[order(sig_res_pd_nd_m$log2FoldChange),]
+Log2FC_pd_nd_m <- ggplot(data = sig_res_pd_nd_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_pd_nd_m.png", pathway_heatmap_pd_nd_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_pd_nd_m.png", Log2FC_pd_nd_m, width = 15, height = 10)
 
 
 #### 7. diabetic male vs diabetic female
 metadata_d_f_m <- filter(metadata, diabetic_status_and_sex == "Diabetic_female" | diabetic_status_and_sex == "Diabetic_male")
 
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_d_f_m = metadata_d_f_m$'sample-id'
+sample_names_d_f_m = append(sample_names_d_f_m, "pathway")
+abundance_data_filtered_d_f_m = abundance_data[, colnames(abundance_data) %in% sample_names_d_f_m] 
+
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_d_f_m = abundance_data_filtered_d_f_m[, colSums(abundance_data_filtered_d_f_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_d_f_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_d_f_m = rownames(t(abundance_data_filtered_d_f_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_d_f_m)
+metadata_sample_ids <- metadata_d_f_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_d_f_m <- abundance_data_filtered_d_f_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_d_f_m <- pathway_daa(abundance = abundance_data_filtered_d_f_m %>% column_to_rownames("pathway"), 
+                                                      metadata = metadata_d_f_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_d_f_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                                     daa_results_df = abundance_daa_results_df_d_f_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_d_f_m <- abundance_daa_results_df_d_f_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_d_f_m = inner_join(feature_with_p_0.05_d_f_m,metacyc_daa_annotated_results_df_d_f_m, by = "feature")
+feature_desc_d_f_m$feature = feature_desc_d_f_m$description
+feature_desc_d_f_m = feature_desc_d_f_m[,c(1:7)]
+colnames(feature_desc_d_f_m) = colnames(feature_with_p_0.05_d_f_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_d_f_m = abundance_data_filtered_d_f_m %>% filter(pathway %in% feature_with_p_0.05_d_f_m$feature)
+colnames(abundance_d_f_m)[1] = "feature"
+abundance_desc_d_f_m = inner_join(abundance_d_f_m,metacyc_daa_annotated_results_df_d_f_m, by = "feature")
+abundance_desc_d_f_m$feature = abundance_desc_d_f_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_d_f_m = abundance_desc_d_f_m[,-c(34:ncol(abundance_desc_d_f_m))] 
+
+# Generate a heatmap
+pathway_heatmap_d_f_m <- pathway_heatmap(abundance = abundance_desc_d_f_m %>% column_to_rownames("feature"), metadata = metadata_d_f_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_d_f_m =  DEseq2_function(abundance_data_filtered_d_f_m, metadata_d_f_m, "diabetic_status_and_sex")
+res_d_f_m$feature =rownames(res_d_f_m)
+res_desc_d_f_m = inner_join(res_d_f_m,metacyc_daa_annotated_results_df_d_f_m, by = "feature")
+res_desc_d_f_m = res_desc_d_f_m[, -c(8:13)]
+View(res_desc_d_f_m)
+
+# Filter to only include significant pathways
+sig_res_d_f_m = res_desc_d_f_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_d_f_m <- sig_res_d_f_m[order(sig_res_d_f_m$log2FoldChange),]
+Log2FC_d_f_m <- ggplot(data = sig_res_d_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_d_f_m.png", pathway_heatmap_d_f_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_d_f_m.png", Log2FC_d_f_m, width = 15, height = 10)
+
+
 #### 8. pre-diabetic male vs pre-diabetic female
 metadata_pd_f_m <- filter(metadata, diabetic_status_and_sex == "Pre-diabetic_female" | diabetic_status_and_sex == "Pre-diabetic_male")
 
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_pd_f_m = metadata_pd_f_m$'sample-id'
+sample_names_pd_f_m = append(sample_names_pd_f_m, "pathway")
+abundance_data_filtered_pd_f_m = abundance_data[, colnames(abundance_data) %in% sample_names_pd_f_m] 
+
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_pd_f_m = abundance_data_filtered_pd_f_m[, colSums(abundance_data_filtered_pd_f_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_pd_f_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_pd_f_m = rownames(t(abundance_data_filtered_pd_f_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_pd_f_m)
+metadata_sample_ids <- metadata_pd_f_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_pd_f_m <- abundance_data_filtered_pd_f_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_pd_f_m <- pathway_daa(abundance = abundance_data_filtered_pd_f_m %>% column_to_rownames("pathway"), 
+                                                      metadata = metadata_pd_f_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_pd_f_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                                     daa_results_df = abundance_daa_results_df_pd_f_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_pd_f_m <- abundance_daa_results_df_pd_f_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_pd_f_m = inner_join(feature_with_p_0.05_pd_f_m,metacyc_daa_annotated_results_df_pd_f_m, by = "feature")
+feature_desc_pd_f_m$feature = feature_desc_pd_f_m$description
+feature_desc_pd_f_m = feature_desc_pd_f_m[,c(1:7)]
+colnames(feature_desc_pd_f_m) = colnames(feature_with_p_0.05_pd_f_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_pd_f_m = abundance_data_filtered_pd_f_m %>% filter(pathway %in% feature_with_p_0.05_pd_f_m$feature)
+colnames(abundance_pd_f_m)[1] = "feature"
+abundance_desc_pd_f_m = inner_join(abundance_pd_f_m,metacyc_daa_annotated_results_df_pd_f_m, by = "feature")
+abundance_desc_pd_f_m$feature = abundance_desc_pd_f_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_pd_f_m = abundance_desc_pd_f_m[,-c(34:ncol(abundance_desc_pd_f_m))] 
+
+# Generate a heatmap
+pathway_heatmap_pd_f_m <- pathway_heatmap(abundance = abundance_desc_pd_f_m %>% column_to_rownames("feature"), metadata = metadata_pd_f_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_pd_f_m =  DEseq2_function(abundance_data_filtered_pd_f_m, metadata_pd_f_m, "diabetic_status_and_sex")
+res_pd_f_m$feature =rownames(res_pd_f_m)
+res_desc_pd_f_m = inner_join(res_pd_f_m,metacyc_daa_annotated_results_df_pd_f_m, by = "feature")
+res_desc_pd_f_m = res_desc_pd_f_m[, -c(8:13)]
+View(res_desc_pd_f_m)
+
+# Filter to only include significant pathways
+sig_res_pd_f_m = res_desc_pd_f_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_pd_f_m <- sig_res_pd_f_m[order(sig_res_pd_f_m$log2FoldChange),]
+Log2FC_pd_f_m <- ggplot(data = sig_res_pd_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_pd_f_m.png", pathway_heatmap_pd_f_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_pd_f_m.png", Log2FC_pd_f_m, width = 15, height = 10)
+
+
 #### 9. non-diabetic male vs non-diabetic female
 metadata_nd_f_m <- filter(metadata, diabetic_status_and_sex == "Non-diabetic_female" | diabetic_status_and_sex == "Non-diabetic_male")
+
+#Filtering the abundance table to only include samples that are in the filtered metadata
+sample_names_nd_f_m = metadata_nd_f_m$'sample-id'
+sample_names_nd_f_m = append(sample_names_nd_f_m, "pathway")
+abundance_data_filtered_nd_f_m = abundance_data[, colnames(abundance_data) %in% sample_names_nd_f_m] 
+
+#Removing individuals with no data that caused a problem for pathways_daa()
+abundance_data_filtered_nd_f_m = abundance_data_filtered_nd_f_m[, colSums(abundance_data_filtered_nd_f_m != 0) > 0]
+
+#Ensuring the rownames for the abundance_data_filtered is empty. This is required for their functions to run.
+rownames(abundance_data_filtered_nd_f_m) = NULL
+
+#verify samples in metadata match samples in abundance_data
+abun_samples_nd_f_m = rownames(t(abundance_data_filtered_nd_f_m[,-1])) #Getting a list of the sample names in the newly filtered abundance data
+# metadata_d_nd_m = metadata[metadata$`sample-id` %in% abun_samples_d_nd_m,] #making sure the filtered metadata only includes these samples
+
+### TROUBLESHOOTING
+# For some reason there's one more in abundance than in metadata
+# Get the sample IDs from both data sources
+abundance_sample_ids <- colnames(abundance_data_filtered_nd_f_m)
+metadata_sample_ids <- metadata_nd_f_m$`sample-id`
+# Find the extra sample(s) in abundance data
+extra_samples <- setdiff(abundance_sample_ids, metadata_sample_ids)
+print(extra_samples) # should only have 'pathway' as an extra sample
+### commented out a line of code because it was deleting sample ...383 from metadata_d_nd_m even though it was still in the abun_samples_d_nd_m
+
+#### DESEq ####
+
+### TROUBLESHOOTING - pathway DAA using DESEQ2 says that there are non-numeric values
+abundance_data_filtered_nd_f_m <- abundance_data_filtered_nd_f_m %>%
+  mutate(across(-pathway, as.numeric))
+### Converted the abundance data to numeric values, but leave pathway column as non-numeric
+
+#Perform pathway DAA using DESEQ2 method
+abundance_daa_results_df_nd_f_m <- pathway_daa(abundance = abundance_data_filtered_nd_f_m %>% column_to_rownames("pathway"), 
+                                                      metadata = metadata_nd_f_m, group = "diabetic_status_and_sex", daa_method = "DESeq2")
+
+# Annotate MetaCyc pathway so they are more descriptive
+metacyc_daa_annotated_results_df_nd_f_m <- pathway_annotation(pathway = "MetaCyc", 
+                                                                     daa_results_df = abundance_daa_results_df_nd_f_m, ko_to_kegg = FALSE)
+
+# Filter p-values to only significant ones
+feature_with_p_0.05_nd_f_m <- abundance_daa_results_df_nd_f_m %>% filter(p_values < 0.05)
+
+#Changing the pathway column to description for the results 
+feature_desc_nd_f_m = inner_join(feature_with_p_0.05_nd_f_m,metacyc_daa_annotated_results_df_nd_f_m, by = "feature")
+feature_desc_nd_f_m$feature = feature_desc_nd_f_m$description
+feature_desc_nd_f_m = feature_desc_nd_f_m[,c(1:7)]
+colnames(feature_desc_nd_f_m) = colnames(feature_with_p_0.05_nd_f_m)
+
+#Changing the pathway column to description for the abundance table
+abundance_nd_f_m = abundance_data_filtered_nd_f_m %>% filter(pathway %in% feature_with_p_0.05_nd_f_m$feature)
+colnames(abundance_nd_f_m)[1] = "feature"
+abundance_desc_nd_f_m = inner_join(abundance_nd_f_m,metacyc_daa_annotated_results_df_nd_f_m, by = "feature")
+abundance_desc_nd_f_m$feature = abundance_desc_nd_f_m$description
+#this line will change for each dataset. 34 represents the number of samples in the filtered abundance table
+abundance_desc_nd_f_m = abundance_desc_nd_f_m[,-c(34:ncol(abundance_desc_nd_f_m))] 
+
+# Generate a heatmap
+pathway_heatmap_nd_f_m <- pathway_heatmap(abundance = abundance_desc_nd_f_m %>% column_to_rownames("feature"), metadata = metadata_nd_f_m, group = "diabetic_status_and_sex")
+
+
+
+### TROUBLESHOOTING - metadata must contain a 'sample_name' column for pathway PCA plot
+colnames(metadata_d_pd_f)[colnames(metadata_d_pd_f) == "sample-id"] <- "sample_name"
+### new problem - there are constant/zero variance columns that PCA can't work with so need to remove?
+# Generate pathway PCA plot
+pathway_pca_d_pd_f <-pathway_pca(abundance = abundance_data_filtered_d_pd_f %>% column_to_rownames("pathway"), metadata = metadata_d_pd_f, group = "diabetic_status_and_sex")
+
+
+
+# Generating a bar plot representing log2FC from the custom deseq2 function
+# Go to the Deseq2 function script and update the metadata category of interest
+# Lead the function in
+source("scripts/Aim4/DESeq2_function.R")
+
+# Run the function on your own data
+res_nd_f_m =  DEseq2_function(abundance_data_filtered_nd_f_m, metadata_nd_f_m, "diabetic_status_and_sex")
+res_nd_f_m$feature =rownames(res_nd_f_m)
+res_desc_nd_f_m = inner_join(res_nd_f_m,metacyc_daa_annotated_results_df_nd_f_m, by = "feature")
+res_desc_nd_f_m = res_desc_nd_f_m[, -c(8:13)]
+View(res_desc_nd_f_m)
+
+# Filter to only include significant pathways
+sig_res_nd_f_m = res_desc_nd_f_m %>%
+  filter(pvalue < 0.05)
+# You can also filter by Log2fold change
+
+sig_res_nd_f_m <- sig_res_nd_f_m[order(sig_res_nd_f_m$log2FoldChange),]
+Log2FC_nd_f_m <- ggplot(data = sig_res_nd_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
+  geom_bar(stat = "identity")+ 
+  theme_bw()+
+  labs(x = "Log2FoldChange", y="Pathways")
+
+# Save all plots to data folder 
+ggsave(filename="data/Aim4/pathway_heatmap_nd_f_m.png", pathway_heatmap_nd_f_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/Log2FC_nd_f_m.png", Log2FC_nd_f_m, width = 15, height = 10)
 
