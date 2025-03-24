@@ -1,0 +1,16 @@
+"ASV","s.Diabetic","s.Non-diabetic","s.Pre-diabetic","index","stat","p.value","Domain","Phylum","Class","Order","Family","Genus","Species"
+"83f6c3db4f6774ccc0fa6fb5d832592f",1,0,0,1,0.214548496706525,0.025,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Alteromonadales","f__Shewanellaceae","g__Shewanella",NA
+"a124b834d7f0f351456c7b01eb7e7c6c",1,0,0,1,0.36077109139688,0.025,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Pasteurellales","f__Pasteurellaceae",NA,NA
+"916342a59ca4b20a4268bdb79e1a7ae7",1,0,0,1,0.223606797749979,0.025,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Burkholderiales","f__Oxalobacteraceae","g__Janthinobacterium",NA
+"57c85e14914b3c8b8b8540cb9b22beb0",1,0,0,1,0.214981496674988,0.045,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Burkholderiales","f__Burkholderiaceae","g__Lautropia","s__Lautropia_sp."
+"6b8486bd198f0e9843430844a4dfe03e",1,0,1,5,0.27867594683136,0.045,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Pseudomonadales","f__Moraxellaceae","g__Acinetobacter",NA
+"50f754bd703030b144a0ba3d9d3081c2",1,0,0,1,0.645652957658627,0.01,"d__Bacteria","p__Proteobacteria","c__Gammaproteobacteria","o__Pseudomonadales","f__Pseudomonadaceae","g__Pseudomonas",NA
+"61c4a9f2cd731b48b0da2cbbcf564f75",1,0,0,1,0.215668567524971,0.04,"d__Bacteria","p__Proteobacteria","c__Alphaproteobacteria","o__Rhizobiales","f__Rhizobiaceae",NA,NA
+"b78c241e6d4b36411b99293656cadb9b",1,0,1,5,0.542393692468468,0.025,"d__Bacteria","p__Actinobacteriota","c__Coriobacteriia","o__Coriobacteriales","f__Atopobiaceae","g__Libanicoccus","s__uncultured_bacterium"
+"e0b087a63a594971171c706b8160e878",1,0,0,1,0.220690037760011,0.03,"d__Bacteria","p__Actinobacteriota","c__Actinobacteria","o__Corynebacteriales","f__Nocardiaceae","g__Nocardia",NA
+"241bde409eb8bc1ac0eb24f821f4b04c",0,1,1,6,0.501778310296575,0.03,"d__Bacteria","p__Firmicutes","c__Bacilli","o__Erysipelotrichales","f__Erysipelotrichaceae","g__Holdemania",NA
+"3a30e857e02486d2c470155f29e857b1",1,0,0,1,0.460358809999371,0.045,"d__Bacteria","p__Firmicutes","c__Bacilli","o__Erysipelotrichales","f__Erysipelotrichaceae","g__uncultured","s__uncultured_bacterium"
+"6a155e13a87b80d4bda063a5d5ef3e25",1,0,0,1,0.223606797749979,0.04,"d__Bacteria","p__Bacteroidota","c__Bacteroidia","o__Bacteroidales","f__Prevotellaceae","g__Prevotellaceae_Ga6A1_group","s__uncultured_bacterium"
+"16489a606772b7121fbbf46155df75b4",1,0,0,1,0.220072784847156,0.015,"d__Bacteria","p__Bacteroidota","c__Bacteroidia","o__Flavobacteriales","f__Flavobacteriaceae","g__Flavobacterium",NA
+"3d38dbb3c67b715bc866c6ee8fdba688",1,0,0,1,0.395251084507312,0.045,"d__Bacteria","p__Bacteroidota","c__Bacteroidia","o__Bacteroidales","f__Marinifilaceae","g__Sanguibacteroides","s__Gabonibacter_massiliensis"
+"8134bb976630893caff3bf42edc0fc00",1,0,0,1,0.214470129691177,0.035,"d__Bacteria","p__Firmicutes","c__Clostridia","o__Clostridiales","f__Clostridiaceae","g__Candidatus_Arthromitus","s__uncultured_bacterium"
