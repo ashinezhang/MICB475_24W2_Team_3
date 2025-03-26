@@ -711,7 +711,8 @@ log2fc_sig_res_d_f_m <- log2fc_sig_res_d_f_m[order(log2fc_sig_res_d_f_m$log2Fold
 Log2FC_d_f_m_2 <- ggplot(data = log2fc_sig_res_d_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
   geom_bar(stat = "identity")+ 
   theme_bw()+
-  labs(x = "Log2FoldChange", y="Pathways")
+  labs(x = "Log2FoldChange", y="Pathways") + 
+  theme(text = element_text(size = 25))
 
 # Save all plots to data folder 
 ggsave(filename="data/Aim4/pathway_heatmap_d_f_m.png", pathway_heatmap_d_f_m, width = 15, height = 10)
