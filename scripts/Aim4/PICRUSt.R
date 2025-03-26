@@ -715,7 +715,7 @@ Log2FC_d_f_m_2 <- ggplot(data = log2fc_sig_res_d_f_m, aes(y = reorder(descriptio
   theme(text = element_text(size = 25))
 
 # Save all plots to data folder 
-ggsave(filename="data/Aim4/pathway_heatmap_d_f_m.png", pathway_heatmap_d_f_m, width = 15, height = 10)
+ggsave(filename="data/Aim4/pathway_heatmap_d_f_m.png", pathway_heatmap_d_f_m, width = 15, height = 15)
 ggsave(filename="data/Aim4/Log2FC_d_f_m.png", Log2FC_d_f_m, width = 15, height = 10)
 
 ggsave(filename="data/Aim4/Log2FC_d_f_m_2.0.png", Log2FC_d_f_m_2, width = 15, height = 10)
