@@ -66,7 +66,37 @@ ordination_df <- as.data.frame(pcoa_bc$vectors)
 
 plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabetic_Status")
 
-#Permanova
+
+## diabetic only
+bc_dm <- distance(colombia_rare, method="weighted_unifrac")
+
+pcoa_bc <- ordinate(colombia_rare, method="PCoA", distance=bc_dm)
+ordination_df <- as.data.frame(pcoa_bc$vectors)
+
+
+plot_ordination(colombia_rare, pcoa_bc, color="diabetic_status")
+
+dm_unifrac <- UniFrac(colombia_rare, weighted=TRUE) # Weighted UniFrac
+data <- as(sample_data(colombia_rare), "data.frame")
+adonis_results<-adonis2(dm_unifrac ~ diabetic_status, data=data)
+adonis2(dm_unifrac ~ diabetic_status, data=data)
+R2_value <- round(adonis_results$R2[1], 3)
+p_value <- adonis_results$`Pr(>F)`[1]
+
+gg_pcoa_diabetic <- plot_ordination(colombia_rare, pcoa_bc, color="diabetic_status") +
+  labs(col = "diabetic status")+
+  annotate(geom ="text", 
+           x = min(ordination_df$Axis.1), 
+           y = max(ordination_df$Axis.2), 
+           label = paste("PERMANOVA: R² =", R2_value, "\n p =", p_value), 
+           hjust = 0, size = 3)
+gg_pcoa_diabetic
+
+ggsave("data/aim2/plot_pcoa_diabetic_only.png"
+       , gg_pcoa_diabetic
+       , height=4, width=5)
+
+#Permanova diabetetic status and sex
 dm_unifrac <- UniFrac(colombia_rare, weighted=TRUE) # Weighted UniFrac
 data <- as(sample_data(colombia_rare), "data.frame")
 adonis_results<-adonis2(dm_unifrac ~ diabetic_status*sex, data=data)
@@ -161,4 +191,12 @@ isa_table<-as.data.frame(isa_table)
 
 write.csv(isa_table, file = "data/aim2/isa_table.csv", row.names = FALSE)
 
+isa_data<- melt(isa_table)%>%
+  filter(!variable %in% c("index", "stat", "p.value"))
+isa_heatmap<-ggplot(isa_data, aes(x=variable, y=Genus, fill = value)) +
+  geom_tile(color="black") +
+  scale_fill_gradient(low = "white", high = "black") +
+  labs(x = "diabetic_status", y = "Genus")
+
+ggsave(filename="data/aim2/isa_heatmap.png",isa_heatmap)
 
