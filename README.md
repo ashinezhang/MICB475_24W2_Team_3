@@ -1,9 +1,7 @@
 # MICB475_24W2_Team_3
 
 ## Meeting Minutes ##
-**February:** [2025-02-03](meeting-minutes/02-03.md) | [2025-02-10](meeting-minutes/02-10.md) | [2025-02-18](meeting-minutes/02-18.md) | [2025-02-24](meeting-minutes/02-24.md) 
-
-**March:** [2025-03-03](meeting-minutes/03-03.md) | [2025-03-10](meeting-minutes/03-10.md) | [2025-03-17](meeting-minutes/03-17.md) | [2025-03-24](meeting-minutes/03-24.md)
+[2025-02-03](meeting-minutes/02-03.md) | [2025-02-10](meeting-minutes/02-10.md) | [2025-02-18](meeting-minutes/02-18.md) | [2025-02-24](meeting-minutes/02-24.md) | [2025-03-03](meeting-minutes/03-03.md) | [2025-03-10](meeting-minutes/03-10.md) | [2025-03-17](meeting-minutes/03-17.md) | [2025-03-24](meeting-minutes/03-24.md) | [2025-03-31](meeting-minutes/03-31.md)
 
 ## Scripts
 **Data processing and merging (did not proceed with):**
