@@ -1,0 +1,3 @@
+"ASV","s.Diabetic_female","s.Diabetic_male","s.Non-diabetic_female","s.Non-diabetic_male","s.Pre-diabetic_female","s.Pre-diabetic_male","index","stat","p.value","Domain","Phylum","Class","Order","Family","Genus","Species"
+"02f1a8106182f0c3e7c8b9391b9e9393",1,0,1,1,1,1,61,0.758158736887871,0.015,"d__Bacteria","p__Bacteroidota","c__Bacteroidia","o__Bacteroidales","f__Barnesiellaceae","g__Barnesiella",NA
+"1016883ef095d4a51045a0df4cb636a9",1,0,1,1,1,1,61,0.791198661237363,0.015,"d__Bacteria","p__Firmicutes","c__Clostridia","o__Oscillospirales","f__Ruminococcaceae","g__[Eubacterium]_siraeum_group","s__[Eubacterium]_siraeum"
