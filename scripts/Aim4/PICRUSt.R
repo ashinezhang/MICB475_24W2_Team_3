@@ -700,7 +700,7 @@ sig_res_d_f_m = res_desc_d_f_m %>%
 sig_res_d_f_m <- sig_res_d_f_m[order(sig_res_d_f_m$log2FoldChange),]
 Log2FC_d_f_m <- ggplot(data = sig_res_d_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
   geom_bar(stat = "identity")+ 
-  theme_bw()+
+#  theme_bw()+
   labs(x = "Log2FoldChange", y="Pathways")
 
 # Filter to only include pathways with >2.0 fold change
@@ -710,7 +710,7 @@ log2fc_sig_res_d_f_m = sig_res_d_f_m %>%
 log2fc_sig_res_d_f_m <- log2fc_sig_res_d_f_m[order(log2fc_sig_res_d_f_m$log2FoldChange),]
 Log2FC_d_f_m_2 <- ggplot(data = log2fc_sig_res_d_f_m, aes(y = reorder(description, sort(as.numeric(log2FoldChange))), x= log2FoldChange, fill = pvalue))+
   geom_bar(stat = "identity")+ 
-  theme_bw()+
+#  theme_bw()+
   labs(x = "Log2FoldChange", y="Pathways") + 
   theme(text = element_text(size = 25))
 
