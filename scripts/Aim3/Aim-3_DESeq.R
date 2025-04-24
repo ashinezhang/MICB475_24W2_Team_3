@@ -42,7 +42,9 @@ sigASVs_d_m_f <- tax_table(d_m_f_DESeq) %>% as.data.frame() %>%
 bar_plot_d_m_f <- ggplot(sigASVs_d_m_f) +
   geom_bar(aes(x=Genus, y=log2FoldChange), stat="identity")+
   geom_errorbar(aes(x=Genus, ymin=log2FoldChange-lfcSE, ymax=log2FoldChange+lfcSE)) +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+  ggtitle("Diabetic males vs. Diabetic females")+
+  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5, size=20), axis.title.x = element_text(size = 20), plot.title = element_text(size = 30, face = "bold", hjust = 0.5), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 20))
+bar_plot_d_m_f
 ggsave(filename="DESeq_d_m_f.png", bar_plot_d_m_f, width = 15, height = 10)
 
 
@@ -76,7 +78,9 @@ sigASVs_pd_m_f <- tax_table(pd_m_f_DESeq) %>% as.data.frame() %>%
 bar_plot_pd_m_f <- ggplot(sigASVs_pd_m_f) +
   geom_bar(aes(x=Genus, y=log2FoldChange), stat="identity")+
   geom_errorbar(aes(x=Genus, ymin=log2FoldChange-lfcSE, ymax=log2FoldChange+lfcSE)) +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+  ggtitle("Pre-diabetic males vs. Pre-diabetic females")+
+  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5, size=18), axis.title.x = element_text(size = 20), plot.title = element_text(size = 30, face = "bold", hjust = 0.5), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 20))
+bar_plot_pd_m_f 
 ggsave(filename="DESeq_pd_m_f.png", bar_plot_pd_m_f, width = 15, height = 10)
 
 
@@ -110,5 +114,7 @@ sigASVs_nd_m_f <- tax_table(nd_m_f_DESeq) %>% as.data.frame() %>%
 bar_plot_nd_m_f <- ggplot(sigASVs_nd_m_f) +
   geom_bar(aes(x=Genus, y=log2FoldChange), stat="identity")+
   geom_errorbar(aes(x=Genus, ymin=log2FoldChange-lfcSE, ymax=log2FoldChange+lfcSE)) +
-  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5))
+  ggtitle("Non-diabetic males vs. Non-diabetic females") +
+  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5, size=20), axis.title.x = element_text(size = 20), plot.title = element_text(size = 30, face = "bold", hjust = 0.5), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 20))
+bar_plot_nd_m_f
 ggsave(filename="DESeq_nd_m_f.png", bar_plot_nd_m_f, width = 15, height = 10)
