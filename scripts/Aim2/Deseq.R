@@ -24,7 +24,7 @@ gg_richness <- plot_richness(colombia_rare, x = "diabetic_status", measures = c(
   geom_boxplot()
 gg_richness
 
-ggsave(filename = "data/aim2/plot_richness.png"
+ggsave(filename = "data/Aim2/plot_richness.png"
        , gg_richness
        , height=4, width=6)
 
@@ -55,7 +55,7 @@ plot_pd
 
 kruskal.test( PD ~ diabetic_status, data=PD_meta)
 
-ggsave(filename = "data/aim2/plot_PD_stats.png", plot_pd)
+ggsave(filename = "data/Aim2/plot_PD_stats.png", plot_pd)
 
 #### Beta diversity #####
 bc_dm <- distance(colombia_rare, method="weighted_unifrac")
@@ -92,7 +92,7 @@ gg_pcoa_diabetic <- plot_ordination(colombia_rare, pcoa_bc, color="diabetic_stat
            hjust = 0, size = 3)
 gg_pcoa_diabetic
 
-ggsave("data/aim2/plot_pcoa_diabetic_only.png"
+ggsave("data/Aim2/plot_pcoa_diabetic_only.png"
        , gg_pcoa_diabetic
        , height=4, width=5)
 
@@ -114,7 +114,7 @@ gg_pcoa <- plot_ordination(colombia_rare, pcoa_bc, color = "sex", shape="diabeti
          hjust = 0, size = 3)
 gg_pcoa
 
-ggsave("data/aim2/plot_pcoa.png"
+ggsave("data/Aim2/plot_pcoa.png"
        , gg_pcoa
        , height=4, width=5)
 ###Deseq###
@@ -141,7 +141,7 @@ vol_plot <- res %>%
   ggplot() +
   geom_point(aes(x=log2FoldChange, y=-log10(padj), col=significant))
 
-ggsave(filename="data/aim2/vol_plot.png",vol_plot)
+ggsave(filename="data/Aim2/vol_plot.png",vol_plot)
 
 # To get table of results
 sigASVs <- res %>% 
@@ -168,7 +168,7 @@ log_bar_plot<-ggplot(sigASVs) +
 
 log_bar_plot
 
-ggsave(filename="data/aim2/log_bar_plot.png",log_bar_plot)
+ggsave(filename="data/Aim2/log_bar_plot.png",log_bar_plot)
 
 #### Indicator Species/Taxa Analysis ####
 # glom to Genus
@@ -198,5 +198,5 @@ isa_heatmap<-ggplot(isa_data, aes(x=variable, y=Genus, fill = value)) +
   scale_fill_gradient(low = "white", high = "black") +
   labs(x = "diabetic_status", y = "Genus")
 
-ggsave(filename="data/aim2/isa_heatmap.png",isa_heatmap)
+ggsave(filename="data/Aim2/isa_heatmap.png",isa_heatmap)
 
