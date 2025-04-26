@@ -28,7 +28,7 @@ plot_shannon <- ggplot(sample_data(colombia_rare), aes(diabetic_status,shannon_v
   scale_x_discrete(labels = function(x) gsub("_", " ", x))
 plot_shannon
 
-ggsave(filename = "data/aim2/shannon_stats.png"
+ggsave(filename = "data/Aim2/shannon_stats.png"
        , plot_shannon
        , height=5, width=6)
 
@@ -47,7 +47,7 @@ plot_chao1 <- ggplot(sample_data(colombia_rare), aes(diabetic_status,chao1_value
   ylim(NA, 450)
 plot_chao1
 
-ggsave(filename = "data/aim2/chao1_stats.png"
+ggsave(filename = "data/Aim2/chao1_stats.png"
        , plot_chao1
        , height=6, width=6)
 
@@ -78,7 +78,7 @@ plot_pd <- ggplot(sample_data(colombia_rare), aes(diabetic_status, phylo_dist$PD
 
 plot_pd
 
-ggsave(filename = "data/aim2/plot_PD_stats.png", plot_pd, height=4, width=6)
+ggsave(filename = "data/Aim2/plot_PD_stats.png", plot_pd, height=4, width=6)
 
 ##Note: Diabetic female and male are actually non-significant when BH is used to account for FDR, but stat compare means won't show it on the plot##
 
