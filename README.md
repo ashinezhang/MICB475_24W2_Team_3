@@ -9,7 +9,7 @@
 
 **Colombia dataset only - qiime processing:** [Metadata clean up](scripts/colombia-metadata-cleanup.R), [Qiime2 taxonomic and diversity analysis](scripts/colombia-qiime2-analysis.sh), [Export files](scripts/colombia_export.sh), [Make phyloseq object](scripts/Phyloseq_obj.R)
 
-**Aim 2 diabetic status differences:** [script](scripts/Aim2), [data files](data/aim2)
+**Aim 2 diabetic status differences:** [script](scripts/Aim2), [data files](data/Aim2)
 
 **Aim 3 sex differences:** [scripts](scripts/Aim3), [data files](data/Aim3)
 
